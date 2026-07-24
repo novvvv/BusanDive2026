@@ -1,0 +1,106 @@
+{
+  "usage_methods": [
+    {
+      "step": 1,
+      "title": "무인 보관함 방문",
+      "description": "보관하실 물품을 가지고 가까운 무인보관함을 방문해 주세요. 온라인 예약 서비스는 준비 중입니다."
+    },
+    {
+      "step": 2,
+      "title": "이용할 보관함 선택",
+      "description": "보관할 물건의 크기에 맞는 보관함의 번호를 선택해 주세요."
+    },
+    {
+      "step": 3,
+      "title": "비밀번호 설정 및 결제",
+      "description": "비밀번호를 설정하고 기본 이용 시간인 4시간에 대한 요금을 결제해 주세요. 4시간 이후에는 시간 당 요금이 추가됩니다."
+    },
+    {
+      "step": 4,
+      "title": "물품 보관",
+      "description": "보관함 문이 열리면 물품을 보관하고 문을 반드시 닫아주세요."
+    }
+  ],
+  "usage_guide": {
+    "operating_hours": "05:00 ~ 익일 00:00",
+    "operating_hours_note": "역마다 운영시간이 다르니 운영 시간 확인이 필요하다. 24시간 운영점은 별도로 (24H)로 표기된다 (예: 대구 동성로 보관함(24H)).",
+    "sizes": [
+      {
+        "type": "소형",
+        "label": "S사이즈 가방",
+        "dimensions": "좌우 45cm × 깊이 56cm × 높이 30cm",
+        "width_cm": 45,
+        "depth_cm": 56,
+        "height_cm": 30
+      },
+      {
+        "type": "중형",
+        "label": "M1 중형 기내용 캐리어",
+        "dimensions": "좌우 45cm × 깊이 56cm × 높이 45cm",
+        "width_cm": 45,
+        "depth_cm": 56,
+        "height_cm": 45
+      },
+      {
+        "type": "중대형",
+        "label": "M2 중대형 수하물 캐리어",
+        "dimensions": "좌우 45cm × 깊이 56cm × 높이 60cm",
+        "width_cm": 45,
+        "depth_cm": 56,
+        "height_cm": 60
+      },
+      {
+        "type": "대형",
+        "label": "L 대형 26인치 이상 캐리어",
+        "dimensions": "좌우 45cm × 깊이 56cm × 높이 90cm",
+        "width_cm": 45,
+        "depth_cm": 56,
+        "height_cm": 90
+      }
+    ],
+    "pricing": [
+      {
+        "size": "소형",
+        "base_4hours": "2,000원",
+        "additional_12hours": "2,000원"
+      },
+      {
+        "size": "중형",
+        "base_4hours": "3,000원",
+        "additional_12hours": "3,000원"
+      },
+      {
+        "size": "대형",
+        "base_4hours": "4,000원",
+        "additional_12hours": "4,000원"
+      }
+    ],
+    "pricing_note": "기본 4시간(시작 ~ 4시간 이내) 요금이며, 4시간 이후에는 12시간마다 추가 요금이 반복 부과된다."
+  },
+  "busan_lockers": [
+    {
+      "place": "씨클라우드호텔",
+      "location": "1층 로비",
+      "locker_count": 16,
+      "latitude": "35.1604439324117",
+      "longitude": "129.162247021768",
+      "kakao_map_url": "https://map.kakao.com/link/search/부산 해운대 씨클라우드 호텔"
+    },
+    {
+      "place": "롯데면세점 8층",
+      "location": "안내데스크 옆",
+      "locker_count": 25,
+      "latitude": "35.156789983664",
+      "longitude": "129.056416218143",
+      "kakao_map_url": "https://map.kakao.com/link/search/롯데면세점 부산점"
+    },
+    {
+      "place": "KT&G 상상마당 부산",
+      "location": "1층",
+      "locker_count": 27,
+      "latitude": "35.1542604",
+      "longitude": "129.0572997",
+      "kakao_map_url": "https://map.kakao.com/link/search/KT&G 상상마당 부산"
+    }
+  ]
+}
