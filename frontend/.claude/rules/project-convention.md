@@ -2,7 +2,7 @@
 
 > 핵심 요약: Next.js 14 App Router + TS + Tailwind v3, pnpm 9 / Node ≥20.9, `@/*` = `src/*`.
 > 라우트 4개 + 오버레이(지도·시트는 라우트 아님). 새 파일은 "화면 전용 → 2곳 사용 시 승격" 규칙.
-> 의존성 추가는 체크리스트 통과 후에만. 푸시 게이트 `pnpm typecheck && pnpm build`.
+> 의존성 추가는 체크리스트 통과 후에만. 푸시 전 `pnpm typecheck && pnpm build` 직접 실행.
 
 ---
 
@@ -20,7 +20,7 @@
 
 ## 2. 디렉토리 구조와 배치 규칙
 
-```
+```text
 frontend/
   src/
     app/                    # 라우팅 전용 — 페이지는 얇게, 조립만
@@ -69,8 +69,8 @@ frontend/
 
 ```bash
 pnpm dev          # 개발 서버 (기본 3000)
-pnpm build        # 프로덕션 빌드 — 푸시 게이트에서 실행
-pnpm typecheck    # tsc --noEmit — 푸시 게이트에서 실행
+pnpm build        # 프로덕션 빌드
+pnpm typecheck    # tsc --noEmit
 pnpm lint         # next lint
 pnpm start        # 빌드 산출물 서빙 (데모 리허설용)
 ```
@@ -107,9 +107,8 @@ pnpm start        # 빌드 산출물 서빙 (데모 리허설용)
 
 ## 7. 품질 게이트
 
-- **푸시 전**: 레포 루트 `.githooks/pre-push` → `pnpm typecheck` + `pnpm build`(frontend/).
-  배포·데모에서 실패할 것을 로컬에서 먼저 잡는다. 우회는 `git push --no-verify` (정말 급할 때만,
-  사유를 커밋/PR에 남긴다).
+- **푸시 전**: 자동 게이트 없음 — `pnpm typecheck && pnpm build`를 직접 실행해 통과를 확인하고
+  푸시한다. 배포·데모에서 실패할 것을 로컬에서 먼저 잡는 것이 원칙.
 - **PR 전**: `.github/PULL_REQUEST_TEMPLATE.md` 체크리스트 — typecheck/build, 3언어 레이아웃,
   비타협 UX 원칙(§7) 위반 없음.
 - 경고 방치 금지: 빌드 경고·lint 경고는 그 PR에서 해소하거나 사유를 명시한다. "노란 줄에 익숙해지면
