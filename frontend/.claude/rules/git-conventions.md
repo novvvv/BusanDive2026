@@ -5,7 +5,7 @@
 
 ## 커밋 메시지
 
-```
+```text
 <type>: <제목 — 한국어 허용, 명사형 종결>
 
 <본문 — 무엇을·왜. 불릿 허용. 선택>
@@ -25,4 +25,4 @@
 
 - 본문은 `.github/PULL_REQUEST_TEMPLATE.md` 구조. write-pr 스킬이 main 대비 diff를 분석해
   `docs/PR.md` 초안을 만든다 (실제 PR 생성은 사람이).
-- 푸시 전 `.githooks/pre-push` 게이트(typecheck+build) 통과 필수.
+- 푸시 전 `pnpm typecheck && pnpm build` 직접 실행해 통과 확인.
