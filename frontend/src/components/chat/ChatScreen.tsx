@@ -80,7 +80,7 @@ export default function ChatScreen() {
 
   const setChips = (list: Omit<ChipVM, "variant">[], withReset = true) => {
     const norm: ChipVM[] = list.map((c) => ({ ...c, variant: "default" }));
-    if (withReset && norm.length) {
+    if (withReset) {
       norm.push({
         label: { ko: "↻ 다시 하기", ja: "↻ やり直す", en: "↻ Start over" }[lang],
         variant: "reset",
@@ -197,11 +197,6 @@ export default function ChatScreen() {
       ja: `${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}以降`,
       en: `After ${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}`,
     }[lang],
-    source: {
-      ko: `${ZIMCARRY_PICKUP_POLICY.sourceName} 기준 · 실제 접수 가능 여부는 예약 페이지에서 확인`,
-      ja: `${ZIMCARRY_PICKUP_POLICY.sourceName}基準 · 実際の受付可否は予約ページで確認`,
-      en: `Based on the GimCarry FAQ · Confirm current availability on the reservation page`,
-    }[lang],
     onReserve: () =>
       window.open(
         ZIMCARRY_PICKUP_POLICY.reservationUrl,
@@ -251,59 +246,50 @@ export default function ChatScreen() {
         };
       }),
     } as Msg);
-    setChips([
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-      {
-        label: { ko: "혼잡 시간 피하고 싶어", ja: "混雑を避けたい", en: "Avoid the crowds" }[lang],
-        onClick: () => api.current.act("cong"),
-      },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-    ]);
+    setChips([]);
   };
 
   const respondLocker = (opts?: { mode?: string; stay?: string; spot?: string }) => {
     const spotOnly = opts?.mode === "spot";
     const spot = opts?.spot || POIS[0].orig;
-    const afterChips = [
-      {
-        label: { ko: "혼잡 자세히", ja: "混雑を詳しく", en: "Crowd details" }[lang],
-        onClick: () => api.current.act("cong"),
-      },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-      { label: T.mapTitle, onClick: () => api.current.openMap() },
-    ];
-    if (spotOnly) {
-      const recommendation = recommendSubwayLockers(spot);
-      lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
-      const distanceBasis = localizedStationName(recommendation.basisStation);
-      const recommendedLockers = recommendation.lockers.map((locker) =>
-        subwayLockerView(locker, distanceBasis),
-      );
-      const intro = recommendation.isResolved
-        ? {
-            ko: `${spot}에 매핑된 ${distanceBasis} 기준 가까운 물품 보관소예요.`,
-            ja: `${spot}に対応する${distanceBasis}を基準に近いロッカーです。`,
-            en: `These lockers are nearest to ${distanceBasis}, mapped from ${spot}.`,
-          }
-        : {
-            ko: `${spot} 위치를 정확히 찾지 못해 특대형 보유 칸수가 많은 순으로 보여드려요.`,
-            ja: `${spot}の位置を特定できなかったため、特大ロッカーの保有数順に表示します。`,
-            en: `I couldn't resolve ${spot}, so these are sorted by XL locker capacity.`,
-          };
-      push({ kind: "text", text: tr(intro) } as Msg);
-      push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
-      setChips(afterChips);
+    const recommendation = recommendSubwayLockers(spot);
+
+    // 위치 해석 실패 — 폴백 추천 없이 재입력 유도 (§6 dead-end 금지: 폼 재제시)
+    if (!recommendation.isResolved) {
+      push({
+        kind: "text",
+        text: {
+          ko: `${spot} 위치를 찾지 못했습니다. 다시 입력해주세요.`,
+          ja: `${spot}の位置が見つかりませんでした。もう一度入力してください。`,
+          en: `Couldn't find ${spot}. Please enter it again.`,
+        }[lang],
+      } as Msg);
+      push({ kind: "stayform", mode: spotOnly ? "spot" : "pickup", done: false } as Msg);
+      setChipsState([]);
       return;
     }
 
-    const stay = opts?.stay?.trim() ?? "";
-    const hotel = findZimcarryHotel(stay);
-    const recommendation = recommendSubwayLockers(spot);
+    // 역명 표기는 main의 다국어 매핑(localizeSubwayStationName) 사용
     const distanceBasis = localizedStationName(recommendation.basisStation);
     const recommendedLockers = recommendation.lockers.map((locker) =>
       subwayLockerView(locker, distanceBasis),
     );
     lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
+
+    if (spotOnly) {
+      const intro = {
+        ko: `${spot}에 매핑된 ${distanceBasis} 기준 가까운 물품 보관소예요.`,
+        ja: `${spot}に対応する${distanceBasis}を基準に近いロッカーです。`,
+        en: `These lockers are nearest to ${distanceBasis}, mapped from ${spot}.`,
+      };
+      push({ kind: "text", text: tr(intro) } as Msg);
+      push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
+      setChips([]);
+      return;
+    }
+
+    const stay = opts?.stay?.trim() ?? "";
+    const hotel = findZimcarryHotel(stay);
 
     if (!hotel) {
       push({
@@ -313,20 +299,14 @@ export default function ChatScreen() {
           ja: "この宿泊先の集荷登録を確認できません",
           en: "Pickup registration couldn't be confirmed",
         }[lang],
-        body: recommendation.isResolved
-          ? {
-              ko: `짐캐리 등록 숙소 목록에서 찾지 못했어요. 대신 마지막 여행지인 ${spot} 근처 지하철 보관함을 안내할게요.`,
-              ja: `ジムキャリーの登録宿泊先一覧に見つかりませんでした。代わりに最後の目的地である${spot}周辺の地下鉄ロッカーをご案内します。`,
-              en: `It wasn't found in GimCarry's registered stays, so here are subway lockers near your final destination, ${spot}.`,
-            }[lang]
-          : {
-              ko: `${spot} 위치를 찾지 못했어요. 대신 특대형 보유 칸수가 많은 보관함을 안내할게요.`,
-              ja: `${spot}の位置を確認できませんでした。代わりに特大ロッカーの多い駅をご案内します。`,
-              en: `${spot} couldn't be resolved, so here are stations with the most XL lockers.`,
-            }[lang],
+        body: {
+          ko: `짐캐리 등록 숙소 목록에서 찾지 못했어요. 대신 마지막 여행지인 ${spot} 근처 지하철 보관함을 안내할게요.`,
+          ja: `ジムキャリーの登録宿泊先一覧に見つかりませんでした。代わりに最後の目的地である${spot}周辺の地下鉄ロッカーをご案内します。`,
+          en: `It wasn't found in GimCarry's registered stays, so here are subway lockers near your final destination, ${spot}.`,
+        }[lang],
       } as Msg);
       push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
-      setChips(afterChips);
+      setChips([]);
       return;
     }
 
@@ -343,7 +323,7 @@ export default function ChatScreen() {
       pickup: pickupView(hotel.name),
       lockers: recommendedLockers,
     } as Msg);
-    setChips(afterChips);
+    setChips([]);
   };
 
   const respondCong = () => {
@@ -371,10 +351,7 @@ export default function ChatScreen() {
           onClick: () => openLockerSheet(recommended.id),
         },
       } as Msg);
-      setChips([
-        { label: T.choices[1], onClick: () => api.current.act("locker") },
-        { label: T.choices[2], onClick: () => api.current.act("rag") },
-      ]);
+      setChips([]);
       return;
     }
     const lk = LOCKERS[0];
@@ -394,10 +371,7 @@ export default function ChatScreen() {
       text: tr(text),
       attach: { type: "congOpen", label: T.detail, onClick: () => openLockerSheet(lk.id) },
     } as Msg);
-    setChips([
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-    ]);
+    setChips([]);
   };
 
   const respondRag = () => {
@@ -411,10 +385,7 @@ export default function ChatScreen() {
         onClick: () => openSourceSheet(),
       },
     } as Msg);
-    setChips([
-      { label: T.choices[0], onClick: () => api.current.act("poi") },
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-    ]);
+    setChips([]);
   };
 
   const respondUnknown = () => {
@@ -445,7 +416,24 @@ export default function ChatScreen() {
     }
   };
 
+  // 자유 입력이 StayForm 제출 문장 꼴이면 숙소·여행지를 추출해 같은 카드 응답을 낸다
+  const parseStayQuery = (text: string): { stay: string; spot: string } | null => {
+    const patterns = [
+      // 입력바는 한 줄 input이라 개행 없음 — s 플래그 불필요 (tsconfig target 제약)
+      /(.+?)에\s*(?:묵|머무|숙박).*?마지막\s*날[은엔]?\s*(.+?)에\s*(?:가|갈)/,
+      /(.+?)に泊ま.*?最終日は(.+?)に行/,
+      /staying at\s+(.+?)[.,].*?(?:visit|go(?:ing)?\s+to)\s+(.+?)\.?\s*$/i,
+    ];
+    for (const p of patterns) {
+      const m = text.match(p);
+      if (m) return { stay: m[1].trim(), spot: m[2].trim() };
+    }
+    return null;
+  };
+
   const route = (text: string) => {
+    const stayQuery = parseStayQuery(text);
+    if (stayQuery) return act("locker", stayQuery);
     const s = text.toLowerCase();
     const has = (...a: string[]) => a.some((k) => text.includes(k) || s.includes(k));
     if (has("荷物", "預け", "ロッカー", "보관", "짐", "locker", "storage", "luggage")) return act("locker");
@@ -713,10 +701,18 @@ export default function ChatScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
+  // 새 질문은 화면 상단으로 스크롤하고, 답변이 와도 질문 위치를 유지한다 (맨 아래 점프 금지)
   useEffect(() => {
     const el = scrollRef.current;
-    if (el) requestAnimationFrame(() => (el.scrollTop = el.scrollHeight));
-  }, [stream, typing]);
+    const last = stream[stream.length - 1];
+    if (!el || !last || last.kind !== "user") return;
+    requestAnimationFrame(() => {
+      const target = el.querySelector<HTMLElement>(`[data-mid="${last.id}"]`);
+      if (!target) return;
+      el.scrollTop =
+        target.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - 10;
+    });
+  }, [stream]);
 
   const edgeLabels = {
     ko: ["숙소 미입력", "미등록 숙소", "수거 마감 경과", "인근 특대 없음", "혼잡 정보 없음", "근거 없음(경계)", "결과 0건", "네트워크 오류", "의도 불명확"],
@@ -726,6 +722,7 @@ export default function ChatScreen() {
   const edgeKeys: EdgeKind[] = ["NO_HOTEL", "UNREGISTERED", "DEADLINE_PASSED", "NO_LOCKER", "NO_CONG", "BOUNDARY", "ZERO", "NETERR", "UNKNOWN"];
 
   const orLabel = { ko: "지하철 물품 보관소", ja: "地下鉄ロッカー", en: "Metro lockers" }[lang];
+  const pickupLabel = { ko: "짐캐리 픽업 숙소", ja: "ジムキャリー集荷の宿泊先", en: "GimCarry pickup stay" }[lang];
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -747,7 +744,7 @@ export default function ChatScreen() {
         className="hd-scroll flex flex-1 flex-col gap-3.5 overflow-y-auto overflow-x-hidden px-4 pb-2 pt-[18px]"
       >
         {stream.map((m) => (
-          <div key={m.id} className="animate-fade-up">
+          <div key={m.id} data-mid={m.id} className="animate-fade-up">
             {m.kind === "user" && (
               <div className="flex justify-end">
                 <div className="max-w-[80%] whitespace-pre-wrap break-words rounded-md rounded-tr-md bg-primary px-3.5 py-[11px] text-[14.5px] font-medium leading-normal text-white">
@@ -791,16 +788,11 @@ export default function ChatScreen() {
               <div className="flex max-w-[82%] flex-col gap-[11px] min-[360px]:ml-[38px]">
                 {m.pickup && (
                   <>
+                    <StreamDivider label={pickupLabel} />
                     <PickupCard p={m.pickup} />
-                    {m.lockers.length > 0 && (
-                      <div className="flex items-center gap-2 text-gray">
-                        <div className="h-px flex-1 bg-line" />
-                        <span className="text-caption font-semibold">{orLabel}</span>
-                        <div className="h-px flex-1 bg-line" />
-                      </div>
-                    )}
                   </>
                 )}
+                {m.lockers.length > 0 && <StreamDivider label={orLabel} />}
                 {m.lockers.map((lk) => (
                   <LockerCard key={lk.id} lk={lk} />
                 ))}
@@ -863,13 +855,9 @@ export default function ChatScreen() {
             </div>
           </div>
         )}
-        <div className="h-0.5 flex-none" />
-      </div>
-
-      {/* 추천 질문 칩 — 빈 입력창만 있는 챗 UI 금지 (§4.2) */}
-      <div className="flex-none bg-canvas">
+        {/* 추천 질문 칩 — 스트림 말미에 흘러가는 요소 (하단 고정 아님, 위로 스크롤 시 함께 사라짐) */}
         {chips.length > 0 && !typing && (
-          <div className="hd-scroll flex gap-2 overflow-x-auto px-4 pb-2.5 pt-2">
+          <div className="hd-scroll -mx-4 flex flex-none gap-2 overflow-x-auto px-4 pb-1 pt-0.5">
             {chips.map((c) => (
               <button
                 key={c.label}
@@ -877,7 +865,7 @@ export default function ChatScreen() {
                 /* ponytail: 시각 크기 우선으로 40px — 44px 터치 타깃 규칙 예외, 문제 되면 min-h-11 복귀 */
                 className={`flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-3 text-[12.5px] font-semibold active:scale-[0.96] ${
                   c.variant === "reset"
-                    ? "border-line-strong bg-transparent text-gray"
+                    ? "ml-auto border-line-strong bg-transparent text-gray"
                     : "border-primary-line bg-card text-primary-dark"
                 }`}
               >
@@ -886,6 +874,10 @@ export default function ChatScreen() {
             ))}
           </div>
         )}
+        <div className="h-0.5 flex-none" />
+      </div>
+
+      <div className="flex-none bg-canvas">
         {/* 입력바 — 하단 고정, safe-area 대응 (§4.2) */}
         {/* 입력+전송 일체형 캡슐 — 전송 버튼이 캡슐 내부 우측 */}
         <div className="px-3.5 pb-3 pt-1.5">
@@ -935,6 +927,16 @@ export default function ChatScreen() {
           </div>
         </BottomSheet>
       )}
+    </div>
+  );
+}
+
+function StreamDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 text-gray">
+      <div className="h-px flex-1 bg-line" />
+      <span className="text-caption font-semibold">{label}</span>
+      <div className="h-px flex-1 bg-line" />
     </div>
   );
 }

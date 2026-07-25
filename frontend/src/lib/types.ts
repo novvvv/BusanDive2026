@@ -49,7 +49,6 @@ export interface PickupVM {
   hotel: string;
   dropOffBy: string;
   collectFrom: string;
-  source: string;
   onReserve: () => void;
 }
 
