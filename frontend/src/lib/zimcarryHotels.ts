@@ -3,6 +3,8 @@
  * 원천: data/zimcarry/zimcarry_hotels.json
  */
 
+import { localizeZimcarryHotelName } from "@/lib/zimcarryHotelNames";
+
 export interface ZimcarryHotel {
   name: string;
   address: string;
@@ -2419,14 +2421,18 @@ export function findZimcarryHotel(value: string): ZimcarryHotel | null {
   const query = normalizeHotelName(value);
   if (query.length < 2) return null;
 
-  const exact = ZIMCARRY_HOTELS.find(
-    (hotel) => normalizeHotelName(hotel.name) === query,
-  );
+  // ko 원문 + ja/en 표기 모두 매칭 대상 — 외국어 UI에서 현지 표기로 입력하는 경우
+  const names = (hotel: ZimcarryHotel) =>
+    (["ko", "ja", "en"] as const).map((lang) =>
+      normalizeHotelName(localizeZimcarryHotelName(hotel.name, lang)),
+    );
+
+  const exact = ZIMCARRY_HOTELS.find((hotel) => names(hotel).includes(query));
   if (exact) return exact;
 
-  const candidates = ZIMCARRY_HOTELS
-    .map((hotel) => ({ hotel, name: normalizeHotelName(hotel.name) }))
-    .filter((candidate) => candidate.name.includes(query));
+  const candidates = ZIMCARRY_HOTELS.filter((hotel) =>
+    names(hotel).some((name) => name.includes(query)),
+  );
 
-  return candidates.length === 1 ? candidates[0].hotel : null;
+  return candidates.length === 1 ? candidates[0] : null;
 }
