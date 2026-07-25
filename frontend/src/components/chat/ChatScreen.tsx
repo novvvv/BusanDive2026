@@ -189,11 +189,6 @@ export default function ChatScreen() {
       ja: `${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}以降`,
       en: `After ${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}`,
     }[lang],
-    source: {
-      ko: `${ZIMCARRY_PICKUP_POLICY.sourceName} 기준 · 실제 접수 가능 여부는 예약 페이지에서 확인`,
-      ja: `${ZIMCARRY_PICKUP_POLICY.sourceName}基準 · 実際の受付可否は予約ページで確認`,
-      en: `Based on the GimCarry FAQ · Confirm current availability on the reservation page`,
-    }[lang],
     onReserve: () =>
       window.open(
         ZIMCARRY_PICKUP_POLICY.reservationUrl,

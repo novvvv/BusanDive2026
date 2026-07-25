@@ -36,7 +36,6 @@ export default function PickupCard({ p }: { p: PickupVM }) {
           <div className="text-[13.5px] font-bold text-ink">{p.collectFrom}</div>
         </div>
       </div>
-      <div className="text-[10.5px] leading-normal text-gray">{p.source}</div>
       <button
         onClick={p.onReserve}
         className="flex min-h-[46px] w-full items-center justify-center gap-1.5 rounded-sm bg-primary text-[14.5px] font-bold text-white active:scale-[0.98] active:bg-primary-dark"
