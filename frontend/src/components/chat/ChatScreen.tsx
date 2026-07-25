@@ -704,10 +704,18 @@ export default function ChatScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lang]);
 
+  // 새 질문은 화면 상단으로 스크롤하고, 답변이 와도 질문 위치를 유지한다 (맨 아래 점프 금지)
   useEffect(() => {
     const el = scrollRef.current;
-    if (el) requestAnimationFrame(() => (el.scrollTop = el.scrollHeight));
-  }, [stream, typing]);
+    const last = stream[stream.length - 1];
+    if (!el || !last || last.kind !== "user") return;
+    requestAnimationFrame(() => {
+      const target = el.querySelector<HTMLElement>(`[data-mid="${last.id}"]`);
+      if (!target) return;
+      el.scrollTop =
+        target.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - 10;
+    });
+  }, [stream]);
 
   const edgeLabels = {
     ko: ["숙소 미입력", "미등록 숙소", "수거 마감 경과", "인근 특대 없음", "혼잡 정보 없음", "근거 없음(경계)", "결과 0건", "네트워크 오류", "의도 불명확"],
@@ -738,7 +746,7 @@ export default function ChatScreen() {
         className="hd-scroll flex flex-1 flex-col gap-3.5 overflow-y-auto overflow-x-hidden px-4 pb-2 pt-[18px]"
       >
         {stream.map((m) => (
-          <div key={m.id} className="animate-fade-up">
+          <div key={m.id} data-mid={m.id} className="animate-fade-up">
             {m.kind === "user" && (
               <div className="flex justify-end">
                 <div className="max-w-[80%] whitespace-pre-wrap break-words rounded-md rounded-tr-md bg-primary px-3.5 py-[11px] text-[14.5px] font-medium leading-normal text-white">
