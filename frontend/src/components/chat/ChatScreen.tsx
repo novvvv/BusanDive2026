@@ -784,9 +784,9 @@ export default function ChatScreen() {
                   <>
                     <StreamDivider label={pickupLabel} />
                     <PickupCard p={m.pickup} />
-                    {m.lockers.length > 0 && <StreamDivider label={orLabel} />}
                   </>
                 )}
+                {m.lockers.length > 0 && <StreamDivider label={orLabel} />}
                 {m.lockers.map((lk) => (
                   <LockerCard key={lk.id} lk={lk} />
                 ))}
