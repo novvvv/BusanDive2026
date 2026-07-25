@@ -5,15 +5,10 @@ import AppHeader from "@/components/common/AppHeader";
 import { ArrowOutIcon, SearchIcon } from "@/components/common/Icons";
 import { ZC } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
+import { ZIMCARRY_HOTELS } from "@/lib/zimcarryHotels";
+import { ZIMCARRY_PICKUP_POLICY } from "@/lib/zimcarryPolicy";
 
 type PkView = "use" | "hotel" | "locker" | "faq";
-
-const HOTELS = [
-  { name: { ko: "서면 스테이 호텔", ja: "西面ステイホテル", en: "Seomyeon Stay Hotel" }, area: { ko: "서면 · 도보 5분", ja: "西面 · 徒歩5分", en: "Seomyeon · 5 min" }, ok: true },
-  { name: { ko: "남포 게스트하우스", ja: "南浦ゲストハウス", en: "Nampo Guesthouse" }, area: { ko: "남포 · 도보 3분", ja: "南浦 · 徒歩3分", en: "Nampo · 3 min" }, ok: true },
-  { name: { ko: "광안리 오션뷰", ja: "広安里オーシャンビュー", en: "Gwangalli Oceanview" }, area: { ko: "광안리 · 도보 8분", ja: "広安里 · 徒歩8分", en: "Gwangalli · 8 min" }, ok: true },
-  { name: { ko: "해운대 게스트하우스", ja: "海雲台ゲストハウス", en: "Haeundae Guesthouse" }, area: { ko: "해운대 · 미등록", ja: "海雲台 · 未登録", en: "Haeundae · unregistered" }, ok: false },
-];
 
 const STEPS = [
   { ko: ["예약·결제", "당일 온라인은 오전 11시 이전\n매장 접수는 오후 3시 이전"], ja: ["予約·決済", "当日オンラインは11時まで\n店舗受付は15時まで"], en: ["Reserve", "Online by 11:00\nIn-store by 15:00"] },
@@ -24,7 +19,7 @@ const STEPS = [
 
 /** 짐캐리 픽업 (§FE설계 1 — 하단 탭) — 이용법/가능 숙소/무인 보관함/FAQ */
 export default function PickupPage() {
-  const { lang, T, tr } = useLang();
+  const { lang, T } = useLang();
   const [view, setView] = useState<PkView>("use");
   const [query, setQuery] = useState("");
   const [faqOpen, setFaqOpen] = useState("");
@@ -32,11 +27,14 @@ export default function PickupPage() {
   const L = {
     title: { ko: "짐캐리 픽업", ja: "ジムキャリー集荷", en: "GimCarry Pickup" }[lang],
     howto: { ko: "이용 방법", ja: "使い方", en: "How it works" }[lang],
-    hotelLabel: { ko: "픽업 가능 숙소", ja: "集荷可能な宿", en: "Partner stays" }[lang],
-    hotelCount: { ko: "343개 제휴", ja: "343軒 提携", en: "343 partners" }[lang],
+    hotelLabel: { ko: "짐캐리 등록 숙소", ja: "ジムキャリー登録宿泊先", en: "GimCarry registered stays" }[lang],
+    hotelCount: {
+      ko: `${ZIMCARRY_HOTELS.length}개 등록`,
+      ja: `${ZIMCARRY_HOTELS.length}軒 登録`,
+      en: `${ZIMCARRY_HOTELS.length} registered`,
+    }[lang],
     searchPh: { ko: "숙소명·지역 검색", ja: "宿名・エリアで検索", en: "Search stay / area" }[lang],
-    ok: { ko: "가능", ja: "可能", en: "OK" }[lang],
-    na: { ko: "미등록", ja: "未登録", en: "N/A" }[lang],
+    registered: { ko: "등록", ja: "登録", en: "Registered" }[lang],
     zcTitle: { ko: "짐캐리 무인 보관함 · 부산", ja: "ジムキャリー無人ロッカー · 釜山", en: "GimCarry lockers · Busan" }[lang],
     zcHours: { ko: `운영 ${ZC.hours}`, ja: `営業 ${ZC.hours}`, en: `Open ${ZC.hours}` }[lang],
     zcFee: {
@@ -49,15 +47,18 @@ export default function PickupPage() {
     countUnit: { ko: "대", ja: "台", en: "" }[lang],
     segs: [
       { key: "use" as PkView, label: { ko: "이용 방법", ja: "使い方", en: "How" }[lang] },
-      { key: "hotel" as PkView, label: { ko: "가능 숙소", ja: "対応の宿", en: "Stays" }[lang] },
+      { key: "hotel" as PkView, label: { ko: "등록 숙소", ja: "登録宿泊先", en: "Stays" }[lang] },
       { key: "locker" as PkView, label: { ko: "무인 보관함", ja: "無人ロッカー", en: "Lockers" }[lang] },
       { key: "faq" as PkView, label: "FAQ" },
     ],
   };
 
   const q = query.trim().toLowerCase();
-  const hotels = HOTELS.map((h) => ({ ...h, nameStr: tr(h.name), areaStr: tr(h.area) })).filter(
-    (h) => !q || h.nameStr.toLowerCase().includes(q) || h.areaStr.toLowerCase().includes(q)
+  const hotels = ZIMCARRY_HOTELS.filter(
+    (hotel) =>
+      !q ||
+      hotel.name.toLowerCase().includes(q) ||
+      hotel.address.toLowerCase().includes(q),
   );
 
   return (
@@ -105,7 +106,7 @@ export default function PickupPage() {
             </div>
             <div className="flex flex-col gap-2 rounded-md border border-line bg-card p-3.5">
               <a
-                href="https://zimcarry.net/reserve/res.php?res_type=transport&pNation=10"
+                href={ZIMCARRY_PICKUP_POLICY.reservationUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-sm bg-primary text-body font-bold text-white active:scale-[0.98] active:bg-primary-dark"
@@ -138,19 +139,15 @@ export default function PickupPage() {
             )}
             {hotels.map((h) => (
               <div
-                key={h.nameStr}
+                key={h.name}
                 className="flex items-center justify-between gap-2.5 rounded-sm border border-line bg-card px-3.5 py-3"
               >
                 <div className="flex min-w-0 flex-col gap-0.5">
-                  <span className="truncate text-[14px] font-bold text-ink">{h.nameStr}</span>
-                  <span className="text-[11.5px] text-sub">{h.areaStr}</span>
+                  <span className="truncate text-[14px] font-bold text-ink">{h.name}</span>
+                  <span className="text-[11.5px] text-sub">{h.address}</span>
                 </div>
-                <span
-                  className={`flex-none rounded-lg px-2.5 py-1 text-caption font-bold ${
-                    h.ok ? "bg-congestion-1bg text-success" : "bg-[#F1ECE6] text-gray"
-                  }`}
-                >
-                  {h.ok ? L.ok : L.na}
+                <span className="flex-none rounded-lg bg-congestion-1bg px-2.5 py-1 text-caption font-bold text-success">
+                  {L.registered}
                 </span>
               </div>
             ))}

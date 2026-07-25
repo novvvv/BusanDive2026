@@ -46,8 +46,9 @@ export interface LockerVM {
 
 export interface PickupVM {
   hotel: string;
-  slot: string;
-  deadline: string;
+  dropOffBy: string;
+  collectFrom: string;
+  source: string;
   onReserve: () => void;
 }
 

@@ -21,6 +21,11 @@ export interface RecommendedSubwayLocker extends SubwayLockerLocation {
   distanceM: number | null;
 }
 
+export interface Coordinates {
+  lat: number;
+  lng: number;
+}
+
 export const SUBWAY_LOCKER_LOCATIONS: SubwayLockerLocation[] = [
   {
     "id": "subway-locker-01",
@@ -894,10 +899,7 @@ function normalizePlace(value: string): string {
   return value.toLowerCase().replace(/[\s·.-]/g, "");
 }
 
-function distanceMeters(
-  from: { lat: number; lng: number },
-  to: { lat: number; lng: number },
-): number {
+function distanceMeters(from: Coordinates, to: Coordinates): number {
   const radius = 6_371_000;
   const latitudeDelta = ((to.lat - from.lat) * Math.PI) / 180;
   const longitudeDelta = ((to.lng - from.lng) * Math.PI) / 180;
@@ -952,12 +954,20 @@ export function recommendSubwayLockers(
   return {
     isResolved: true,
     basisStation: target.name,
-    lockers: available
-      .map((locker) => ({
-        ...locker,
-        distanceM: distanceMeters(target, locker),
-      }))
-      .sort((a, b) => (a.distanceM ?? Infinity) - (b.distanceM ?? Infinity))
-      .slice(0, limit),
+    lockers: recommendSubwayLockersNear(target, limit),
   };
+}
+
+export function recommendSubwayLockersNear(
+  coordinates: Coordinates,
+  limit = 3,
+): RecommendedSubwayLocker[] {
+  return SUBWAY_LOCKER_LOCATIONS
+    .filter((locker) => locker.xl > 0)
+    .map((locker) => ({
+      ...locker,
+      distanceM: distanceMeters(coordinates, locker),
+    }))
+    .sort((a, b) => (a.distanceM ?? Infinity) - (b.distanceM ?? Infinity))
+    .slice(0, limit);
 }

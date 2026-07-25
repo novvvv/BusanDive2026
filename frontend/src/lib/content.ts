@@ -41,8 +41,8 @@ export interface UiStrings {
   congAdvice: string;
   lockerTitle: string;
   pickupTitle: string;
-  pickupSlot: string;
-  pickupDeadline: string;
+  pickupDropOff: string;
+  pickupCollect: string;
   floor: string;
   asOf: string;
   choicesQ: string;
@@ -74,7 +74,7 @@ export const UI: L10n<UiStrings> = {
     cong: ["여유", "보통", "혼잡", "심함"],
     congAdvice: "오전을 추천해요.",
     lockerTitle: "보관함", pickupTitle: "짐캐리 픽업",
-    pickupSlot: "수거 예정", pickupDeadline: "당일 마감", floor: "층", asOf: "기준",
+    pickupDropOff: "숙소 프론트 맡김", pickupCollect: "거점 수령", floor: "층", asOf: "기준",
     choicesQ: "무엇을 도와드릴까요? 아래에서 골라주세요.",
     choices: ["관광지 추천", "짐 보관", "이용 방법"],
     retry: "다시 시도", netErr: "연결이 원활하지 않아요. 잠시 후 다시 시도해 주세요.",
@@ -96,7 +96,7 @@ export const UI: L10n<UiStrings> = {
     cong: ["ゆとり", "ふつう", "混雑", "非常に混雑"],
     congAdvice: "午前がおすすめです。",
     lockerTitle: "ロッカー", pickupTitle: "ジムキャリー集荷",
-    pickupSlot: "集荷予定", pickupDeadline: "当日締切", floor: "階", asOf: "時点",
+    pickupDropOff: "宿泊先フロントに預ける", pickupCollect: "拠点で受取", floor: "階", asOf: "時点",
     choicesQ: "何をお手伝いしましょう？下から選んでください。",
     choices: ["観光地のおすすめ", "荷物を預ける", "使い方"],
     retry: "再試行", netErr: "接続が不安定です。しばらくして再度お試しください。",
@@ -118,7 +118,7 @@ export const UI: L10n<UiStrings> = {
     cong: ["Light", "Moderate", "Busy", "Very busy"],
     congAdvice: "Mornings are recommended.",
     lockerTitle: "Locker", pickupTitle: "GimCarry pickup",
-    pickupSlot: "Pickup slot", pickupDeadline: "Same-day cutoff", floor: "Floor", asOf: "as of",
+    pickupDropOff: "Leave at hotel front", pickupCollect: "Collect at hub", floor: "Floor", asOf: "as of",
     choicesQ: "How can I help? Pick one below.",
     choices: ["Recommend spots", "Store luggage", "How to use"],
     retry: "Retry", netErr: "Connection is unstable. Please try again shortly.",
@@ -210,10 +210,6 @@ export const ALT_LOCKER: Locker = {
   distance_m: 1800,
   congestion: { grade: 4, peak: { ko: "승차 18~19시", ja: "乗車18〜19時", en: "boarding 18–19" }, sample: { ko: "2025년 승하차 데이터", ja: "2025年 乗降データ", en: "2025 ridership data" } },
 };
-
-// ── 픽업 (check_pickup) ──────────────────────
-export const HOTEL: L10n = { ko: "서면 스테이 호텔", ja: "西面ステイホテル", en: "Seomyeon Stay Hotel" };
-export const PICKUP_OK = { available: true, slot_time: "15:00~17:00", deadline: "13:00" };
 
 // ── 혼잡 타임라인 (시트 확장형) 남포역 예시 ──
 // grade 1~4, 요일(월~일) × 시간대(09,12,15,18)

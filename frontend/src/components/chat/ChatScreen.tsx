@@ -14,9 +14,7 @@ import {
   ALT_LOCKER,
   BOUNDARY_CHANNELS,
   FEE_XL,
-  HOTEL,
   LOCKERS,
-  PICKUP_OK,
   POIS,
   RAG_FEE,
   STATIONS,
@@ -29,6 +27,8 @@ import {
 } from "@/lib/subwayLockers";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
 import type { ChipVM, LockerVM, Msg, PickupVM } from "@/lib/types";
+import { findZimcarryHotel } from "@/lib/zimcarryHotels";
+import { ZIMCARRY_PICKUP_POLICY } from "@/lib/zimcarryPolicy";
 
 // 혼잡 4등급 색 (congestion 토큰) — 항상 텍스트 라벨과 병행 (§7)
 const CDOT = ["#1E9E6A", "#C99A2E", "#E1712B", "#C93F35"];
@@ -133,7 +133,7 @@ export default function ChatScreen() {
 
   const subwayLockerView = (
     locker: RecommendedSubwayLocker,
-    basisStation: string | null,
+    distanceBasis: string | null,
   ): LockerVM => {
     const congestionSource = findSubwayCongestion(locker.id);
     const cong = congestionSource
@@ -166,20 +166,38 @@ export default function ChatScreen() {
         locker.distanceM === null
           ? { ko: "거리 확인 필요", ja: "距離確認が必要", en: "Distance unavailable" }[lang]
           : {
-              ko: `${basisStation}역 기준 ${locker.distanceM}m`,
-              ja: `${basisStation}駅から ${locker.distanceM}m`,
-              en: `${locker.distanceM}m from ${basisStation} Station`,
+              ko: `${distanceBasis}에서 직선거리 ${locker.distanceM}m`,
+              ja: `${distanceBasis}から直線距離 ${locker.distanceM}m`,
+              en: `${locker.distanceM}m straight-line from ${distanceBasis}`,
             }[lang],
       cong,
       onDetail: () => openLockerSheet(locker.id),
     };
   };
 
-  const pickupView = (hotel?: string): PickupVM => ({
-    hotel: hotel || tr(HOTEL),
-    slot: PICKUP_OK.slot_time,
-    deadline: PICKUP_OK.deadline,
-    onReserve: () => api.current.toast(),
+  const pickupView = (hotel: string): PickupVM => ({
+    hotel,
+    dropOffBy: {
+      ko: `${ZIMCARRY_PICKUP_POLICY.hotelDropOffBy}까지`,
+      ja: `${ZIMCARRY_PICKUP_POLICY.hotelDropOffBy}まで`,
+      en: `By ${ZIMCARRY_PICKUP_POLICY.hotelDropOffBy}`,
+    }[lang],
+    collectFrom: {
+      ko: `${ZIMCARRY_PICKUP_POLICY.hubCollectFrom} 이후`,
+      ja: `${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}以降`,
+      en: `After ${ZIMCARRY_PICKUP_POLICY.hubCollectFrom}`,
+    }[lang],
+    source: {
+      ko: `${ZIMCARRY_PICKUP_POLICY.sourceName} 기준 · 실제 접수 가능 여부는 예약 페이지에서 확인`,
+      ja: `${ZIMCARRY_PICKUP_POLICY.sourceName}基準 · 実際の受付可否は予約ページで確認`,
+      en: `Based on the GimCarry FAQ · Confirm current availability on the reservation page`,
+    }[lang],
+    onReserve: () =>
+      window.open(
+        ZIMCARRY_PICKUP_POLICY.reservationUrl,
+        "_blank",
+        "noopener,noreferrer",
+      ),
   });
 
   const respondPoi = () => {
@@ -222,11 +240,6 @@ export default function ChatScreen() {
   const respondLocker = (opts?: { mode?: string; stay?: string; spot?: string }) => {
     const spotOnly = opts?.mode === "spot";
     const spot = opts?.spot || POIS[0].orig;
-    const recommendation = recommendSubwayLockers(spot);
-    lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
-    const recommendedLockers = recommendation.lockers.map((locker) =>
-      subwayLockerView(locker, recommendation.basisStation),
-    );
     const afterChips = [
       {
         label: { ko: "혼잡 자세히", ja: "混雑を詳しく", en: "Crowd details" }[lang],
@@ -236,6 +249,18 @@ export default function ChatScreen() {
       { label: T.mapTitle, onClick: () => api.current.openMap() },
     ];
     if (spotOnly) {
+      const recommendation = recommendSubwayLockers(spot);
+      lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
+      const distanceBasis = recommendation.basisStation
+        ? {
+            ko: `${recommendation.basisStation}역`,
+            ja: `${recommendation.basisStation}駅`,
+            en: `${recommendation.basisStation} Station`,
+          }[lang]
+        : null;
+      const recommendedLockers = recommendation.lockers.map((locker) =>
+        subwayLockerView(locker, distanceBasis),
+      );
       const intro = recommendation.isResolved
         ? {
             ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준 가까운 물품 보관소예요.`,
@@ -252,22 +277,58 @@ export default function ChatScreen() {
       setChips(afterChips);
       return;
     }
-    const intro = recommendation.isResolved
+
+    const stay = opts?.stay?.trim() ?? "";
+    const hotel = findZimcarryHotel(stay);
+    const recommendation = recommendSubwayLockers(spot);
+    const distanceBasis = recommendation.basisStation
       ? {
-          ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준으로 픽업과 가까운 보관함을 함께 찾았어요.`,
-          ja: `${spot}に対応する${recommendation.basisStation}駅を基準に、集荷と近いロッカーを探しました。`,
-          en: `I found pickup and lockers near ${recommendation.basisStation} Station, mapped from ${spot}.`,
-        }
-      : {
-          ko: `${spot} 위치를 정확히 찾지 못해 픽업과 특대형 보유 칸수가 많은 보관함을 함께 보여드려요.`,
-          ja: `${spot}の位置を特定できなかったため、集荷と特大ロッカーの多い場所を表示します。`,
-          en: `I couldn't resolve ${spot}, so I'm showing pickup and stations with the most XL lockers.`,
-        };
-    push({ kind: "text", text: tr(intro) } as Msg);
-    // 픽업·보관함은 나란히 동급 — 위계 없음 (§5.2)
+          ko: `${recommendation.basisStation}역`,
+          ja: `${recommendation.basisStation}駅`,
+          en: `${recommendation.basisStation} Station`,
+        }[lang]
+      : null;
+    const recommendedLockers = recommendation.lockers.map((locker) =>
+      subwayLockerView(locker, distanceBasis),
+    );
+    lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
+
+    if (!hotel) {
+      push({
+        kind: "pickfail",
+        title: {
+          ko: "이 숙소는 픽업 등록 여부를 확인하기 어려워요",
+          ja: "この宿泊先の集荷登録を確認できません",
+          en: "Pickup registration couldn't be confirmed",
+        }[lang],
+        body: recommendation.isResolved
+          ? {
+              ko: `짐캐리 등록 숙소 목록에서 찾지 못했어요. 대신 마지막 여행지인 ${spot} 근처 지하철 보관함을 안내할게요.`,
+              ja: `ジムキャリーの登録宿泊先一覧に見つかりませんでした。代わりに最後の目的地である${spot}周辺の地下鉄ロッカーをご案内します。`,
+              en: `It wasn't found in GimCarry's registered stays, so here are subway lockers near your final destination, ${spot}.`,
+            }[lang]
+          : {
+              ko: `${spot} 위치를 찾지 못했어요. 대신 특대형 보유 칸수가 많은 보관함을 안내할게요.`,
+              ja: `${spot}の位置を確認できませんでした。代わりに特大ロッカーの多い駅をご案内します。`,
+              en: `${spot} couldn't be resolved, so here are stations with the most XL lockers.`,
+            }[lang],
+      } as Msg);
+      push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
+      setChips(afterChips);
+      return;
+    }
+
+    push({
+      kind: "text",
+      text: {
+        ko: `${hotel.name}은 짐캐리 등록 숙소예요. 픽업 안내와 마지막 여행지인 ${spot} 근처 보관함을 함께 찾았어요.`,
+        ja: `${hotel.name}はジムキャリーの登録宿泊先です。集荷案内と最後の目的地である${spot}周辺のロッカーを一緒に探しました。`,
+        en: `${hotel.name} is a registered GimCarry stay. Here are pickup details and lockers near your final destination, ${spot}.`,
+      }[lang],
+    } as Msg);
     push({
       kind: "locker",
-      pickup: pickupView(opts?.stay),
+      pickup: pickupView(hotel.name),
       lockers: recommendedLockers,
     } as Msg);
     setChips(afterChips);
@@ -474,9 +535,9 @@ export default function ChatScreen() {
             kind: "pickfail",
             title: pick({ ko: "이 숙소는 픽업이 어려워요", ja: "この宿は集荷が難しいです", en: "Pickup isn't available for this stay" }),
             body: pick({
-              ko: "픽업 제휴 숙소(343개) 밖이에요. 대신 동선에 보관함이 있어요.",
-              ja: "集荷提携の宿（343軒）以外です。代わりに動線上にロッカーがあります。",
-              en: "It's outside the 343 partner stays. But there are lockers on your route.",
+              ko: "등록 숙소 목록(342개)에서 찾지 못했어요. 대신 동선에 보관함이 있어요.",
+              ja: "登録宿泊先一覧（342軒）に見つかりません。代わりに動線上にロッカーがあります。",
+              en: "It wasn't found among the 342 registered stays. But there are lockers on your route.",
             }),
           } as Msg);
           push({ kind: "locker", pickup: null, lockers: LOCKERS.map(lockerView) } as Msg);
@@ -491,7 +552,11 @@ export default function ChatScreen() {
         think(T.loadingLocker, () => {
           push({
             kind: "pickfail",
-            title: pick({ ko: "오늘 수거 마감(13:00)이 지났어요", ja: "本日の集荷締切（13:00）を過ぎました", en: "Today's pickup cutoff (13:00) has passed" }),
+            title: pick({
+              ko: `당일 온라인 예약 마감(${ZIMCARRY_PICKUP_POLICY.onlineReservationBy})이 지났어요`,
+              ja: `当日のオンライン予約締切（${ZIMCARRY_PICKUP_POLICY.onlineReservationBy}）を過ぎました`,
+              en: `Today's online booking cutoff (${ZIMCARRY_PICKUP_POLICY.onlineReservationBy}) has passed`,
+            }),
             body: pick({
               ko: "익일 픽업으로 예약하거나, 오늘은 동선의 보관함을 이용하실 수 있어요.",
               ja: "翌日集荷で予約するか、本日は動線上のロッカーをご利用いただけます。",
@@ -502,7 +567,12 @@ export default function ChatScreen() {
           setChips([
             {
               label: pick({ ko: "익일 픽업 예약", ja: "翌日集荷を予約", en: "Book next-day" }),
-              onClick: () => api.current.toast(),
+              onClick: () =>
+                window.open(
+                  ZIMCARRY_PICKUP_POLICY.reservationUrl,
+                  "_blank",
+                  "noopener,noreferrer",
+                ),
             },
             { label: T.mapTitle, onClick: () => api.current.openMap() },
           ]);
@@ -691,11 +761,13 @@ export default function ChatScreen() {
                 {m.pickup && (
                   <>
                     <PickupCard p={m.pickup} />
-                    <div className="flex items-center gap-2 text-gray">
-                      <div className="h-px flex-1 bg-line" />
-                      <span className="text-caption font-semibold">{orLabel}</span>
-                      <div className="h-px flex-1 bg-line" />
-                    </div>
+                    {m.lockers.length > 0 && (
+                      <div className="flex items-center gap-2 text-gray">
+                        <div className="h-px flex-1 bg-line" />
+                        <span className="text-caption font-semibold">{orLabel}</span>
+                        <div className="h-px flex-1 bg-line" />
+                      </div>
+                    )}
                   </>
                 )}
                 {m.lockers.map((lk) => (

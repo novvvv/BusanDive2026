@@ -20,7 +20,7 @@
 | 혼잡(도) | congestion, `grade: 1~4` | 1 여유 / 2 보통 / 3 혼잡 / 4 심함. 문구는 항상 과거형 (§7-②). `null`이면 영역 자체 미렌더 |
 | 픽업 | pickup, `check_pickup` | 짐캐리 숙소 수거. 보관함과 **동급 병렬** 제시 (위계 금지) |
 | 픽업 불가 사유 | `NO_HOTEL` / `UNREGISTERED` / `DEADLINE_PASSED` | 각각 대응 UI 존재 (§6) |
-| 숙소 | stay/hotel | 제휴 343개. 미등록이면 UNREGISTERED |
+| 숙소 | stay/hotel | `zimcarry_hotels.json` 등록 숙소 342개. 목록 포함은 등록 여부이며 실시간 접수 가능을 뜻하지 않음. 미등록이면 UNREGISTERED |
 | 관광지 | POI, `recommend_poi` / `Poi` | 부산시 API. 이미지 없을 수 있음 → 무이미지 변형 필수 |
 | 경계 응답 | boundary, `BoundaryCard` | 근거 문서 없을 때 "답하지 않음" — 에러 아님, 경고색 남용 금지 |
 | 근거·출처 | source, `sources[]` / `SourceChip` | 요금·마감 포함 답변엔 출처 칩 필수 (§7-④) |
