@@ -7,6 +7,7 @@ import SizeInfoPopover from "@/components/common/SizeInfoPopover";
 import { ALT_LOCKER, CONGESTION_WEEK, LOCKERS, STATIONS } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
+import { localizeSubwayLockerLoc } from "@/lib/subwayLockerLoc";
 import { SUBWAY_LOCKER_LOCATIONS } from "@/lib/subwayLockers";
 import { localizeSubwayStationName } from "@/lib/subwayNames";
 
@@ -71,7 +72,7 @@ export default function LockerSheet({
     },
   ];
   const location = subwayLocker
-    ? subwayLocker.loc
+    ? localizeSubwayLockerLoc(subwayLocker.loc, lang)
     : `${mockLocker!.detail_loc.floor} · ${tr(mockLocker!.detail_loc.exits)}`;
 
   const labels = {

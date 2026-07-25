@@ -100,6 +100,7 @@ pnpm start        # 빌드 산출물 서빙 (데모 리허설용)
 | 키 | 용도 | 비고 |
 | -- | ---- | ---- |
 | `NEXT_PUBLIC_KAKAO_MAP_KEY` | 카카오맵 JS SDK 앱 키 (MapOverlay) | 빌드 타임 인라인. 카카오 콘솔에 사용 도메인 등록 필요. 없으면 placeholder 폴백 |
+| `NEXT_DIST_DIR` | 빌드 산출 디렉토리 지정 (기본 `.next`) | 검증 빌드 시 `.next-verify` 등으로 분리해 dev 서버 캐시 오염 방지 |
 
 - 도입 규칙:
   - 브라우저 노출 필요 시에만 `NEXT_PUBLIC_` 접두사 — **빌드 타임에 인라인**되므로 배포 환경별로

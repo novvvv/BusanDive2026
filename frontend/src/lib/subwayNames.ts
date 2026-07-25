@@ -666,6 +666,7 @@ function normalizeStationName(value: string): string {
   return value
     .normalize("NFKC")
     .toLowerCase()
+    .replace(/\([^)]*\)/g, "") // 병기 부역명 제거 — "하단(부산본병원)" → "하단"
     .replace(/[\s.·ㆍ・-]/g, "")
     .replace(/(station|stn\.|駅|역)$/i, "");
 }
@@ -687,7 +688,14 @@ export function findSubwayStationName(
       (station) =>
         station.line === line &&
         normalizeStationName(station.nameKo) === normalized,
-    ) ?? null
+    ) ??
+    // "국제금융센터" ↔ "국제금융센터.부산은행"처럼 병기 접미가 붙은 공식 역명 대응
+    SUBWAY_STATION_NAMES.find(
+      (station) =>
+        station.line === line &&
+        normalizeStationName(station.nameKo).startsWith(normalized),
+    ) ??
+    null
   );
 }
 
@@ -697,8 +705,9 @@ export function localizeSubwayStationName(
   lang: SubwayNameLanguage,
 ): string {
   const station = findSubwayStationName(nameKo, line);
+  // ko는 입력 역명 기준 — 공식 데이터의 병기 부역명("부전(부산시민공원…)")을 UI에 노출하지 않는다
   if (!station) return lang === "ko" ? `${nameKo}역` : nameKo;
-  if (lang === "ko") return `${station.nameKo}역`;
+  if (lang === "ko") return `${nameKo}역`;
   if (lang === "ja") {
     return station.nameJa.endsWith("駅")
       ? station.nameJa

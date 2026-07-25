@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import AppHeader from "@/components/common/AppHeader";
-import { ArrowOutIcon, SearchIcon } from "@/components/common/Icons";
+import { ArrowOutIcon, ChevronDownIcon, SearchIcon, StayIcon } from "@/components/common/Icons";
 import { ZC } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
+import { ZIMCARRY_FAQ_SECTIONS } from "@/lib/zimcarryFaq";
+import { localizeZimcarryHotelAddress, localizeZimcarryHotelName } from "@/lib/zimcarryHotelNames";
 import { ZIMCARRY_HOTELS } from "@/lib/zimcarryHotels";
 import { ZIMCARRY_PICKUP_POLICY } from "@/lib/zimcarryPolicy";
 
@@ -27,6 +29,11 @@ export default function PickupPage() {
   const L = {
     title: { ko: "짐캐리 픽업", ja: "ジムキャリー集荷", en: "GimCarry Pickup" }[lang],
     howto: { ko: "이용 방법", ja: "使い方", en: "How it works" }[lang],
+    reserveHint: {
+      ko: `짐캐리 공식 사이트로 이동 · 당일 온라인 예약 ${ZIMCARRY_PICKUP_POLICY.onlineReservationBy}까지`,
+      ja: `ジムキャリー公式サイトへ移動 · 当日オンライン予約は${ZIMCARRY_PICKUP_POLICY.onlineReservationBy}まで`,
+      en: `Opens the GimCarry site · Same-day online booking by ${ZIMCARRY_PICKUP_POLICY.onlineReservationBy}`,
+    }[lang],
     hotelLabel: { ko: "짐캐리 등록 숙소", ja: "ジムキャリー登録宿泊先", en: "GimCarry registered stays" }[lang],
     hotelCount: {
       ko: `${ZIMCARRY_HOTELS.length}개 등록`,
@@ -34,14 +41,11 @@ export default function PickupPage() {
       en: `${ZIMCARRY_HOTELS.length} registered`,
     }[lang],
     searchPh: { ko: "숙소명·지역 검색", ja: "宿名・エリアで検索", en: "Search stay / area" }[lang],
-    registered: { ko: "등록", ja: "登録", en: "Registered" }[lang],
-    zcTitle: { ko: "짐캐리 무인 보관함 · 부산", ja: "ジムキャリー無人ロッカー · 釜山", en: "GimCarry lockers · Busan" }[lang],
+    zcTitle: { ko: "짐캐리 무인 보관함", ja: "ジムキャリー無人ロッカー", en: "GimCarry lockers" }[lang],
     zcHours: { ko: `운영 ${ZC.hours}`, ja: `営業 ${ZC.hours}`, en: `Open ${ZC.hours}` }[lang],
-    zcFee: {
-      ko: "소 2,000 · 중 3,000 · 대 4,000원 (기본 4시간, 이후 12시간마다 추가)",
-      ja: "小2,000 · 中3,000 · 大4,000원（基本4時間・以降12時間毎）",
-      en: "S 2,000 · M 3,000 · L 4,000원 (4 hrs base, +per 12 hrs)",
-    }[lang],
+    zcFeeLabel: { ko: "크기별 요금", ja: "サイズ別 料金", en: "Price by size" }[lang],
+    zcFeeBase: { ko: "기본 4시간 기준", ja: "基本4時間の料金", en: "Base fare for 4 hrs" }[lang],
+    areaBadge: { ko: "부산", ja: "釜山", en: "Busan" }[lang],
     mapLabel: { ko: "카카오맵", ja: "カカオマップ", en: "Kakao Map" }[lang],
     faqTitle: { ko: "자주 묻는 질문 · 짐배송", ja: "よくある質問 · 配送", en: "FAQ · Delivery" }[lang],
     countUnit: { ko: "대", ja: "台", en: "" }[lang],
@@ -58,6 +62,7 @@ export default function PickupPage() {
     (hotel) =>
       !q ||
       hotel.name.toLowerCase().includes(q) ||
+      localizeZimcarryHotelName(hotel.name, lang).toLowerCase().includes(q) ||
       hotel.address.toLowerCase().includes(q),
   );
 
@@ -88,32 +93,34 @@ export default function PickupPage() {
           <>
             <div className="flex flex-col gap-[11px]">
               <span className="text-label font-bold text-ink">{L.howto}</span>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-col gap-2">
                 {STEPS.map((st, i) => (
-                  <div key={i} className="flex flex-col gap-1.5 rounded-sm border border-line bg-card p-3">
-                    <div className="flex items-center gap-[7px]">
-                      <div className="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full bg-primary-bg text-[12px] font-extrabold text-primary-dark">
-                        {i + 1}
-                      </div>
-                      <span className="text-[12.5px] font-bold text-ink">{st[lang][0]}</span>
+                  <div key={i} className="flex items-start gap-2.5 rounded-sm border border-line bg-card p-3">
+                    <div className="flex h-[22px] w-[22px] flex-none items-center justify-center rounded-full bg-primary-bg text-[12px] font-extrabold text-primary-dark">
+                      {i + 1}
                     </div>
-                    <span className="whitespace-pre-line text-[10.5px] leading-normal text-sub">
-                      {st[lang][1]}
-                    </span>
+                    <div className="flex min-w-0 flex-col gap-1">
+                      <span className="text-[12.5px] font-bold leading-[22px] text-ink">{st[lang][0]}</span>
+                      <span className="whitespace-pre-line text-[11px] leading-normal text-sub">
+                        {st[lang][1]}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="flex flex-col gap-2 rounded-md border border-line bg-card p-3.5">
+            <div className="flex flex-col gap-2">
               <a
                 href={ZIMCARRY_PICKUP_POLICY.reservationUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="flex min-h-12 w-full items-center justify-center gap-1.5 rounded-sm bg-primary text-body font-bold text-white active:scale-[0.98] active:bg-primary-dark"
+                className="flex min-h-11 w-full items-center justify-center gap-1.5 rounded-sm bg-primary text-label font-bold text-white active:scale-[0.98] active:bg-primary-dark"
               >
                 {T.reserve}
-                <ArrowOutIcon stroke="#fff" />
+                <ArrowOutIcon size={14} stroke="#fff" />
               </a>
+              {/* 외부 딥링크 + 마감 근거 한 줄 (§7-④) — 시각은 정책 데이터 원본 유지 */}
+              <span className="text-center text-[11px] text-gray">{L.reserveHint}</span>
             </div>
           </>
         )}
@@ -143,12 +150,16 @@ export default function PickupPage() {
                 className="flex items-center justify-between gap-2.5 rounded-sm border border-line bg-card px-3.5 py-3"
               >
                 <div className="flex min-w-0 flex-col gap-0.5">
-                  <span className="truncate text-[14px] font-bold text-ink">{h.name}</span>
-                  <span className="text-[11.5px] text-sub">{h.address}</span>
+                  <span className="flex items-center gap-1.5 text-[14px] font-bold text-ink">
+                    <span className="flex-none text-primary">
+                      <StayIcon />
+                    </span>
+                    <span className="truncate">{localizeZimcarryHotelName(h.name, lang)}</span>
+                  </span>
+                  <span className="text-[11.5px] text-sub">
+                    {localizeZimcarryHotelAddress(h.address, lang)}
+                  </span>
                 </div>
-                <span className="flex-none rounded-lg bg-congestion-1bg px-2.5 py-1 text-caption font-bold text-success">
-                  {L.registered}
-                </span>
               </div>
             ))}
           </div>
@@ -160,7 +171,29 @@ export default function PickupPage() {
               <span className="text-label font-bold text-ink">{L.zcTitle}</span>
               <span className="text-caption text-gray">{L.zcHours}</span>
             </div>
-            <div className="rounded-xxs bg-canvas px-[11px] py-2 text-[11.5px] text-sub">{L.zcFee}</div>
+            {/* 크기별 요금 — 보관소 현황·상세 시트와 동일한 셀 그리드 패턴 (흰 카드로 묶음) */}
+            <div className="flex flex-col gap-2 rounded-md border border-line bg-card p-3.5 shadow-card">
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="text-caption font-bold text-sub">{L.zcFeeLabel}</span>
+                <span className="text-[10px] font-semibold text-gray">{L.zcFeeBase}</span>
+              </div>
+              <div className="flex gap-1.5">
+                {ZC.pricing.map((p, i) => (
+                  <div
+                    key={p.size}
+                    className="flex-1 rounded-[9px] border border-line bg-canvas px-0.5 py-1.5 text-center"
+                  >
+                    <div className="text-[10px] font-semibold text-gray">
+                      {[T.small, T.medium, T.large][i]}
+                    </div>
+                    <div className="mt-px text-label font-extrabold text-ink">{p.base}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <span className="mt-1 w-fit rounded-full bg-primary-bg px-2.5 py-1 text-caption font-bold text-primary-dark">
+              {L.areaBadge}
+            </span>
             {ZC.lockers.map((z) => (
               <a
                 key={z.place}
@@ -186,28 +219,39 @@ export default function PickupPage() {
         )}
 
         {view === "faq" && (
-          <div className="flex flex-col gap-2">
-            <span className="text-label font-bold text-ink">{L.faqTitle}</span>
-            {ZC.faq["짐배송"].map((f, i) => {
-              const id = `d${i}`;
-              const open = faqOpen === id;
-              return (
-                <div key={id} className="overflow-hidden rounded-sm border border-line bg-card">
-                  <button
-                    onClick={() => setFaqOpen(open ? "" : id)}
-                    className="flex w-full items-start justify-between gap-2.5 px-3.5 py-[13px] text-left active:bg-canvas"
-                  >
-                    <span className="text-[12.5px] font-semibold leading-snug text-ink">{f.q}</span>
-                    <span className="flex-none text-[18px] font-semibold leading-none text-primary">
-                      {open ? "−" : "+"}
-                    </span>
-                  </button>
-                  {open && (
-                    <div className="px-3.5 pb-3.5 text-[12.5px] leading-relaxed text-sub">{f.a}</div>
-                  )}
-                </div>
-              );
-            })}
+          <div className="flex flex-col gap-4">
+            <span className="-mb-1.5 text-label font-bold text-ink">{L.faqTitle}</span>
+            {ZIMCARRY_FAQ_SECTIONS.map((section) => (
+              <div key={section.id} className="flex flex-col gap-2">
+                <span className="text-[12px] font-bold text-sub">{section.title[lang]}</span>
+                {section.items.map((f, i) => {
+                  const id = `${section.id}-${i}`;
+                  const open = faqOpen === id;
+                  return (
+                    <div key={id} className="overflow-hidden rounded-sm border border-line bg-card">
+                      <button
+                        onClick={() => setFaqOpen(open ? "" : id)}
+                        className="flex w-full items-start justify-between gap-2.5 px-3.5 py-[13px] text-left active:bg-canvas"
+                      >
+                        <span className="text-[12.5px] font-semibold leading-snug text-ink">
+                          {f.q[lang]}
+                        </span>
+                        <span
+                          className={`mt-0.5 flex-none text-primary transition-transform ${open ? "rotate-180" : ""}`}
+                        >
+                          <ChevronDownIcon size={15} />
+                        </span>
+                      </button>
+                      {open && (
+                        <div className="whitespace-pre-line px-3.5 pb-3.5 text-[12.5px] leading-relaxed text-sub">
+                          {f.a[lang]}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
         )}
       </div>

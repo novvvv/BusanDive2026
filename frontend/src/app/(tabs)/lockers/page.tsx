@@ -6,6 +6,7 @@ import { PinIcon, SearchIcon } from "@/components/common/Icons";
 import LineBadge from "@/components/common/LineBadge";
 import SizeInfoPopover from "@/components/common/SizeInfoPopover";
 import { useLang } from "@/lib/i18n";
+import { localizeSubwayLockerLoc } from "@/lib/subwayLockerLoc";
 import { SUBWAY_LOCKER_LOCATIONS } from "@/lib/subwayLockers";
 import {
   localizeSubwayStationName,
@@ -84,7 +85,7 @@ export default function LockersPage() {
                   <span className="mt-0.5 flex-none">
                     <PinIcon size={13} />
                   </span>
-                  {lk.loc}
+                  {localizeSubwayLockerLoc(lk.loc, lang)}
                 </span>
               </div>
               <div className="flex items-baseline justify-between gap-2">

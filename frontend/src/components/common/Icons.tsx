@@ -52,9 +52,28 @@ export const BoxIcon = ({ size = 15 }: { size?: number }) => (
   </svg>
 );
 
+export const StayIcon = ({ size = 14 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <rect x="5" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="1.8" />
+    <path d="M10 21v-3.5h4V21" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <path
+      d="M9 7.5h.01M15 7.5h.01M9 12h.01M15 12h.01"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 export const ArrowOutIcon = ({ size = 15, stroke = "currentColor" }: { size?: number; stroke?: string }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
     <path d="M7 17L17 7M9 7h8v8" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
+
+export const ChevronDownIcon = ({ size = 13 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
