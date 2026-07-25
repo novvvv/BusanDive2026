@@ -237,6 +237,23 @@ export default function ChatScreen() {
   const respondLocker = (opts?: { mode?: string; stay?: string; spot?: string }) => {
     const spotOnly = opts?.mode === "spot";
     const spot = opts?.spot || POIS[0].orig;
+    const recommendation = recommendSubwayLockers(spot);
+
+    // 위치 해석 실패 — 폴백 추천 없이 재입력 유도 (§6 dead-end 금지: 폼 재제시)
+    if (!recommendation.isResolved) {
+      push({
+        kind: "text",
+        text: {
+          ko: `${spot} 위치를 찾지 못했습니다. 다시 입력해주세요.`,
+          ja: `${spot}の位置が見つかりませんでした。もう一度入力してください。`,
+          en: `Couldn't find ${spot}. Please enter it again.`,
+        }[lang],
+      } as Msg);
+      push({ kind: "stayform", mode: spotOnly ? "spot" : "pickup", done: false } as Msg);
+      setChipsState([]);
+      return;
+    }
+
     const afterChips = [
       {
         label: { ko: "혼잡 자세히", ja: "混雑を詳しく", en: "Crowd details" }[lang],
@@ -244,30 +261,22 @@ export default function ChatScreen() {
       },
       { label: T.choices[2], onClick: () => api.current.act("rag") },
     ];
+    const distanceBasis = {
+      ko: `${recommendation.basisStation}역`,
+      ja: `${recommendation.basisStation}駅`,
+      en: `${recommendation.basisStation} Station`,
+    }[lang];
+    const recommendedLockers = recommendation.lockers.map((locker) =>
+      subwayLockerView(locker, distanceBasis),
+    );
+    lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
+
     if (spotOnly) {
-      const recommendation = recommendSubwayLockers(spot);
-      lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
-      const distanceBasis = recommendation.basisStation
-        ? {
-            ko: `${recommendation.basisStation}역`,
-            ja: `${recommendation.basisStation}駅`,
-            en: `${recommendation.basisStation} Station`,
-          }[lang]
-        : null;
-      const recommendedLockers = recommendation.lockers.map((locker) =>
-        subwayLockerView(locker, distanceBasis),
-      );
-      const intro = recommendation.isResolved
-        ? {
-            ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준 가까운 물품 보관소예요.`,
-            ja: `${spot}に対応する${recommendation.basisStation}駅を基準に近いロッカーです。`,
-            en: `These lockers are nearest to ${recommendation.basisStation} Station, mapped from ${spot}.`,
-          }
-        : {
-            ko: `${spot} 위치를 정확히 찾지 못해 특대형 보유 칸수가 많은 순으로 보여드려요.`,
-            ja: `${spot}の位置を特定できなかったため、特大ロッカーの保有数順に表示します。`,
-            en: `I couldn't resolve ${spot}, so these are sorted by XL locker capacity.`,
-          };
+      const intro = {
+        ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준 가까운 물품 보관소예요.`,
+        ja: `${spot}に対応する${recommendation.basisStation}駅を基準に近いロッカーです。`,
+        en: `These lockers are nearest to ${recommendation.basisStation} Station, mapped from ${spot}.`,
+      };
       push({ kind: "text", text: tr(intro) } as Msg);
       push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
       setChips(afterChips);
@@ -276,18 +285,6 @@ export default function ChatScreen() {
 
     const stay = opts?.stay?.trim() ?? "";
     const hotel = findZimcarryHotel(stay);
-    const recommendation = recommendSubwayLockers(spot);
-    const distanceBasis = recommendation.basisStation
-      ? {
-          ko: `${recommendation.basisStation}역`,
-          ja: `${recommendation.basisStation}駅`,
-          en: `${recommendation.basisStation} Station`,
-        }[lang]
-      : null;
-    const recommendedLockers = recommendation.lockers.map((locker) =>
-      subwayLockerView(locker, distanceBasis),
-    );
-    lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
 
     if (!hotel) {
       push({
@@ -297,17 +294,11 @@ export default function ChatScreen() {
           ja: "この宿泊先の集荷登録を確認できません",
           en: "Pickup registration couldn't be confirmed",
         }[lang],
-        body: recommendation.isResolved
-          ? {
-              ko: `짐캐리 등록 숙소 목록에서 찾지 못했어요. 대신 마지막 여행지인 ${spot} 근처 지하철 보관함을 안내할게요.`,
-              ja: `ジムキャリーの登録宿泊先一覧に見つかりませんでした。代わりに最後の目的地である${spot}周辺の地下鉄ロッカーをご案内します。`,
-              en: `It wasn't found in GimCarry's registered stays, so here are subway lockers near your final destination, ${spot}.`,
-            }[lang]
-          : {
-              ko: `${spot} 위치를 찾지 못했어요. 대신 특대형 보유 칸수가 많은 보관함을 안내할게요.`,
-              ja: `${spot}の位置を確認できませんでした。代わりに特大ロッカーの多い駅をご案内します。`,
-              en: `${spot} couldn't be resolved, so here are stations with the most XL lockers.`,
-            }[lang],
+        body: {
+          ko: `짐캐리 등록 숙소 목록에서 찾지 못했어요. 대신 마지막 여행지인 ${spot} 근처 지하철 보관함을 안내할게요.`,
+          ja: `ジムキャリーの登録宿泊先一覧に見つかりませんでした。代わりに最後の目的地である${spot}周辺の地下鉄ロッカーをご案内します。`,
+          en: `It wasn't found in GimCarry's registered stays, so here are subway lockers near your final destination, ${spot}.`,
+        }[lang],
       } as Msg);
       push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
       setChips(afterChips);
