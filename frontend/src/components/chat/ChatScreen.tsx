@@ -836,7 +836,7 @@ export default function ChatScreen() {
                 /* ponytail: 시각 크기 우선으로 40px — 44px 터치 타깃 규칙 예외, 문제 되면 min-h-11 복귀 */
                 className={`flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-3 text-[12.5px] font-semibold active:scale-[0.96] ${
                   c.variant === "reset"
-                    ? "border-line-strong bg-transparent text-gray"
+                    ? "ml-auto border-line-strong bg-transparent text-gray"
                     : "border-primary-line bg-card text-primary-dark"
                 }`}
               >
