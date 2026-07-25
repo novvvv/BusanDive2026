@@ -425,7 +425,24 @@ export default function ChatScreen() {
     }
   };
 
+  // 자유 입력이 StayForm 제출 문장 꼴이면 숙소·여행지를 추출해 같은 카드 응답을 낸다
+  const parseStayQuery = (text: string): { stay: string; spot: string } | null => {
+    const patterns = [
+      // 입력바는 한 줄 input이라 개행 없음 — s 플래그 불필요 (tsconfig target 제약)
+      /(.+?)에\s*(?:묵|머무|숙박).*?마지막\s*날[은엔]?\s*(.+?)에\s*(?:가|갈)/,
+      /(.+?)に泊ま.*?最終日は(.+?)に行/,
+      /staying at\s+(.+?)[.,].*?(?:visit|go(?:ing)?\s+to)\s+(.+?)\.?\s*$/i,
+    ];
+    for (const p of patterns) {
+      const m = text.match(p);
+      if (m) return { stay: m[1].trim(), spot: m[2].trim() };
+    }
+    return null;
+  };
+
   const route = (text: string) => {
+    const stayQuery = parseStayQuery(text);
+    if (stayQuery) return act("locker", stayQuery);
     const s = text.toLowerCase();
     const has = (...a: string[]) => a.some((k) => text.includes(k) || s.includes(k));
     if (has("荷物", "預け", "ロッカー", "보관", "짐", "locker", "storage", "luggage")) return act("locker");
