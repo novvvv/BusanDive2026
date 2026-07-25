@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>반나절 — 서비스 플로우차트</title>
+<style>
+:root{
+  --blue:#3182F6; --blue-bg:#E8F2FE; --blue-dk:#1B64DA;
+  --ink:#191F28; --sub:#4E5968; --gray:#8B95A1; --line:#D1D6DB;
+  --bg:#F2F4F6; --card:#FFFFFF; --dark:#191F28;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:72px 32px 120px;}
+
+/* header */
+.head{margin-bottom:64px;}
+.head .kicker{font-size:15px;font-weight:700;color:var(--blue);letter-spacing:-.2px;margin-bottom:14px;}
+.head h1{font-size:44px;font-weight:800;letter-spacing:-1.4px;line-height:1.3;}
+.head p{font-size:18px;color:var(--sub);margin-top:16px;letter-spacing:-.3px;}
+
+/* section */
+section{background:var(--card);border-radius:28px;padding:52px 48px;margin-bottom:28px;}
+section.dark{background:var(--dark);}
+.sec-head{margin-bottom:44px;}
+.sec-no{display:inline-block;font-size:13px;font-weight:800;color:var(--blue);background:var(--blue-bg);
+  border-radius:999px;padding:6px 14px;letter-spacing:.2px;margin-bottom:16px;}
+.dark .sec-no{background:#252D3A;}
+.sec-head h2{font-size:30px;font-weight:800;letter-spacing:-.9px;line-height:1.35;}
+.dark .sec-head h2{color:#fff;}
+.sec-head p{font-size:16px;color:var(--gray);margin-top:10px;letter-spacing:-.3px;}
+
+/* flow primitives */
+.flow{display:flex;flex-direction:column;align-items:center;}
+.node{
+  background:#fff;border:2px solid #E5E8EB;border-radius:18px;
+  padding:20px 26px;min-width:300px;max-width:640px;text-align:center;
+}
+.node .t{font-size:18px;font-weight:700;letter-spacing:-.4px;}
+.node .d{font-size:14px;color:var(--gray);margin-top:7px;letter-spacing:-.2px;line-height:1.55;}
+.node.user{background:var(--bg);border-color:transparent;}
+.node.llm{background:var(--dark);border-color:transparent;}
+.node.llm .t{color:#fff;} .node.llm .d{color:#8B95A1;}
+.node.tool{background:var(--blue);border-color:transparent;}
+.node.tool .t{color:#fff;} .node.tool .d{color:rgba(255,255,255,.78);}
+.node.rule{background:#fff;border-color:var(--blue);}
+.node.rule .t{color:var(--blue-dk);}
+.node.out{background:var(--blue-bg);border-color:transparent;}
+.node.out .t{color:var(--blue-dk);}
+.node.warn{background:#FFF4E6;border-color:transparent;}
+.node.warn .t{color:#C7791A;}
+.node.data{background:var(--bg);border-color:transparent;padding:14px 20px;min-width:0;}
+.node.data .t{font-size:14px;font-weight:600;color:var(--sub);}
+.node.sm{min-width:220px;padding:16px 20px;}
+.node.sm .t{font-size:16px;}
+.node.sm .d{font-size:13px;margin-top:5px;}
+
+.arrow{position:relative;height:52px;width:100%;}
+.arrow::before{content:'';position:absolute;left:50%;top:0;bottom:9px;width:2px;background:var(--line);transform:translateX(-1px);}
+.arrow::after{content:'';position:absolute;left:50%;bottom:0;width:0;height:0;
+  border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--line);transform:translateX(-6px);}
+.arrow .lab{position:absolute;left:50%;top:50%;transform:translate(14px,-50%);
+  font-size:13px;color:var(--gray);white-space:nowrap;background:#fff;padding:3px 8px;border-radius:6px;letter-spacing:-.2px;}
+.dark .arrow .lab{background:var(--dark);}
+.arrow.short{height:34px;}
+
+/* branch */
+.branch{width:100%;}
+.branch .bar{position:relative;height:38px;}
+.branch .bar::before{content:'';position:absolute;top:0;left:50%;width:2px;height:18px;background:var(--line);transform:translateX(-1px);}
+.branch .bar::after{content:'';position:absolute;top:18px;left:25%;right:25%;height:2px;background:var(--line);}
+.branch .cols{display:flex;gap:28px;}
+.branch .cols > div{flex:1;display:flex;flex-direction:column;align-items:center;position:relative;padding-top:8px;}
+/* 커넥터는 컬럼 위쪽 음수 영역 안에서 끝난다 — 라벨을 침범하지 않도록 */
+.branch .cols > div::before{content:'';position:absolute;top:-20px;left:50%;width:2px;height:11px;background:var(--line);transform:translateX(-1px);}
+.branch .cols > div::after{content:'';position:absolute;top:-9px;left:50%;width:0;height:0;
+  border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--line);transform:translateX(-6px);}
+.branch .cols .node{min-width:0;width:100%;}
+.bl{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:12px;letter-spacing:-.2px;white-space:nowrap;}
+
+/* 3분기: 바깥 컬럼 중심이 1/6, 5/6 지점 */
+.branch.three .bar::after{left:16.6%;right:16.6%;}
+/* 커넥터 없는 분기 (독립 케이스 나열) */
+.branch.nobar .cols > div::before,
+.branch.nobar .cols > div::after{display:none;}
+
+/* merge */
+.merge{position:relative;height:44px;width:100%;}
+.merge::before{content:'';position:absolute;bottom:20px;left:25%;right:25%;height:2px;background:var(--line);}
+.merge::after{content:'';position:absolute;bottom:0;left:50%;width:2px;height:20px;background:var(--line);transform:translateX(-1px);}
+.merge .up{position:absolute;bottom:20px;width:2px;height:24px;background:var(--line);}
+.merge .up.l{left:25%;} .merge .up.r{right:25%;}
+.merge.three::before{left:16.6%;right:16.6%;}
+.merge.three .up.l{left:16.6%;} .merge.three .up.r{right:16.6%;}
+
+/* data strip */
+.strip{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px;}
+.pill{font-size:13px;font-weight:600;color:var(--sub);background:var(--bg);border-radius:999px;padding:7px 14px;letter-spacing:-.2px;}
+.pill.b{background:var(--blue-bg);color:var(--blue-dk);}
+
+/* note */
+.note{margin-top:36px;background:var(--bg);border-radius:16px;padding:20px 24px;font-size:15px;color:var(--sub);letter-spacing:-.3px;line-height:1.7;}
+.note b{color:var(--ink);}
+.note.blue{background:var(--blue-bg);color:var(--blue-dk);}
+.note.blue b{color:var(--blue-dk);}
+
+/* legend */
+.legend{display:flex;flex-wrap:wrap;gap:14px;}
+.lg{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--sub);font-weight:600;}
+.sw{width:26px;height:26px;border-radius:9px;border:2px solid #E5E8EB;background:#fff;}
+.sw.user{background:var(--bg);border-color:transparent;}
+.sw.llm{background:var(--dark);border-color:transparent;}
+.sw.tool{background:var(--blue);border-color:transparent;}
+.sw.rule{border-color:var(--blue);}
+.sw.out{background:var(--blue-bg);border-color:transparent;}
+.sw.warn{background:#FFF4E6;border-color:transparent;}
+
+/* layer diagram */
+.layers{display:flex;flex-direction:column;gap:0;}
+.layer{background:#fff;border-radius:18px;padding:22px 26px;border:2px solid #E5E8EB;}
+.layer .lt{font-size:13px;font-weight:800;color:var(--blue);letter-spacing:.2px;margin-bottom:12px;}
+.layer .row{display:flex;gap:10px;flex-wrap:wrap;}
+.layer .box{flex:1;min-width:150px;background:var(--bg);border-radius:12px;padding:14px 16px;text-align:center;}
+.layer .box .bt{font-size:15px;font-weight:700;letter-spacing:-.3px;}
+.layer .box .bd{font-size:12.5px;color:var(--gray);margin-top:5px;line-height:1.5;}
+.layer.blue{background:var(--blue);border-color:transparent;}
+.layer.blue .lt{color:rgba(255,255,255,.75);}
+.layer.blue .box{background:rgba(255,255,255,.16);}
+.layer.blue .box .bt{color:#fff;} .layer.blue .box .bd{color:rgba(255,255,255,.8);}
+.layer.dk{background:var(--dark);border-color:transparent;}
+.layer.dk .box{background:#252D3A;}
+.layer.dk .box .bt{color:#fff;} .layer.dk .box .bd{color:var(--gray);}
+.vgap{height:30px;position:relative;}
+.vgap::before{content:'';position:absolute;left:50%;top:2px;bottom:9px;width:2px;background:var(--line);transform:translateX(-1px);}
+.vgap::after{content:'';position:absolute;left:50%;bottom:0;width:0;height:0;
+  border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--line);transform:translateX(-6px);}
+
+.foot{text-align:center;font-size:14px;color:var(--gray);margin-top:8px;}
+@media print{ body{background:#fff;} section{break-inside:avoid;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="kicker">부산 DIVE 2026 · 팀 BWave</div>
+    <h1>반나절 — 서비스 플로우차트</h1>
+    <p>전체 사용자 플로우와 기능별 상세 동작을 정리한 문서입니다.</p>
+  </div>
+
+  <!-- 범례 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">LEGEND</div>
+      <h2>도형 규칙</h2>
+      <p>색이 곧 책임 주체입니다. 파란 박스는 데이터가 근거인 단계, 검은 박스는 LLM이 판단하는 단계입니다.</p>
+    </div>
+    <div class="legend">
+      <div class="lg"><div class="sw user"></div>사용자 입력</div>
+      <div class="lg"><div class="sw llm"></div>LLM 판단</div>
+      <div class="lg"><div class="sw tool"></div>도구 호출</div>
+      <div class="lg"><div class="sw rule"></div>규칙 기반 코드</div>
+      <div class="lg"><div class="sw out"></div>사용자에게 보이는 결과</div>
+      <div class="lg"><div class="sw warn"></div>예외 · 폴백</div>
+    </div>
+  </section>
+
+  <!-- 1. 전체 플로우 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 00</div>
+      <h2>전체 사용자 플로우</h2>
+      <p>네 단계가 하나의 대화 안에서 이어집니다. 사용자는 어느 단계로 진입해도 나머지가 따라옵니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node user" style="min-width:520px;">
+        <div class="t">[1] 관광지 · 루트 입력</div>
+        <div class="d">"마지막 날 어디가 좋아?" · "감천문화마을이랑 남포동 갈 거야"</div>
+      </div>
+
+      <div class="arrow"><span class="lab">보관함 보유 역 인근 POI 추천</span></div>
+
+      <div class="node out" style="min-width:520px;">
+        <div class="t">[2] 짐 보관 옵션 조회</div>
+        <div class="d">역내 물품보관함(71개 역) &nbsp;|&nbsp; 짐캐리 픽업(등록 숙소 343개 한정)</div>
+      </div>
+
+      <div class="arrow"><span class="lab">거리 · 특대형 칸수 순 정렬</span></div>
+
+      <div class="node out" style="min-width:520px;">
+        <div class="t">[3] 사용 가능한 보관소 1~3개 제시</div>
+        <div class="d">위치 + 보유 칸수 + 요금 &nbsp;·&nbsp; 과거 역별/시간별 혼잡도 병기</div>
+      </div>
+
+      <div class="arrow"><span class="lab">사용자가 근거를 보고 선택</span></div>
+
+      <div class="node out" style="min-width:520px;">
+        <div class="t">[4] 이용 방법 질의응답</div>
+        <div class="d">숙소 픽업 · 무인 보관 · 짐 배송 · FAQ 문서 기반 답변 (RAG)</div>
+      </div>
+
+      <div class="strip" style="margin-top:26px;">
+        <span class="pill b">전 구간 한국어 · 일본어 · 영어</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>단계는 순서가 아니라 상태입니다.</b> "짐 어디 맡겨?"로 시작하면 [2]부터, 숙소명을 먼저 말하면 픽업 판단부터 진입합니다.
+      화면 플로우가 아니라 대화가 골격이기 때문에 가능한 구조입니다.
+    </div>
+  </section>
+
+  <!-- 2. 시스템 구조 -->
+  <section class="dark">
+    <div class="sec-head">
+      <div class="sec-no">ARCHITECTURE</div>
+      <h2>계층 구조</h2>
+      <p>LLM은 도구를 고를 뿐, 사실을 만들지 않습니다.</p>
+    </div>
+
+    <div class="layers">
+      <div class="layer dk">
+        <div class="lt">USER</div>
+        <div class="row"><div class="box"><div class="bt">자연어 입력 (한 · 일 · 영)</div></div></div>
+      </div>
+      <div class="vgap"></div>
+      <div class="layer dk">
+        <div class="lt">LLM ORCHESTRATOR</div>
+        <div class="row">
+          <div class="box"><div class="bt">의도 파악</div><div class="bd">무엇을 묻는가</div></div>
+          <div class="box"><div class="bt">도구 선택 · 호출</div><div class="bd">Function Calling</div></div>
+          <div class="box"><div class="bt">결과 조합</div><div class="bd">근거와 함께 자연어로</div></div>
+        </div>
+      </div>
+      <div class="vgap"></div>
+      <div class="layer blue">
+        <div class="lt">TOOLS — 규칙 기반, 재현 가능</div>
+        <div class="row">
+          <div class="box"><div class="bt">관광지 추천</div><div class="bd">인근 역 탐색 · 거리 정렬</div></div>
+          <div class="box"><div class="bt">보관소 조회</div><div class="bd">특대형 칸수 필터</div></div>
+          <div class="box"><div class="bt">픽업 가능 판단</div><div class="bd">숙소 목록 대조</div></div>
+          <div class="box"><div class="bt">혼잡도 조회</div><div class="bd">역×요일×시간 집계</div></div>
+          <div class="box"><div class="bt">문서 검색 (RAG)</div><div class="bd">근거 조각 반환</div></div>
+        </div>
+      </div>
+      <div class="vgap"></div>
+      <div class="layer dk">
+        <div class="lt">DATA</div>
+        <div class="row">
+          <div class="box"><div class="bt">부산테마여행 API</div><div class="bd">부산시 · 5개 언어 원문</div></div>
+          <div class="box"><div class="bt">물품보관함 71개 역</div><div class="bd">공공데이터포털</div></div>
+          <div class="box"><div class="bt">역사 정보 114역</div><div class="bd">위경도 조인 마스터</div></div>
+          <div class="box"><div class="bt">승하차 81,760행</div><div class="bd">2025년 · 결측 0</div></div>
+          <div class="box"><div class="bt">짐캐리 이용 안내</div><div class="bd">공개 정보 문서화</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 기능1 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 01</div>
+      <h2>관광지 추천 — 역방향 필터</h2>
+      <p>관광지를 먼저 고르고 짐을 나중에 걱정하는 대신, 짐 맡길 수 있는 곳만 후보로 삼습니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node user"><div class="t">"마지막 날 어디가 좋아?"</div><div class="d">취향 · 시간 · 지역 조건이 섞인 열린 질문</div></div>
+      <div class="arrow"></div>
+      <div class="node llm"><div class="t">의도 파악 → <span style="color:#5B9DF9;">관광지 추천</span> 도구 호출</div><div class="d">조건을 파라미터로 변환 (지역 · 테마 · 소요시간)</div></div>
+      <div class="arrow"><span class="lab">도구 진입 — 이하 전부 규칙 기반</span></div>
+
+      <div class="node rule sm"><div class="t">① 보관함 보유 역 집합 확정</div><div class="d">71개 역 중 특대형 보유 역만 남김</div></div>
+      <div class="arrow short"></div>
+      <div class="node rule sm"><div class="t">② POI 후보 조회</div><div class="d">부산테마여행 API + 반나절 적합성 큐레이션 태그</div></div>
+      <div class="arrow short"></div>
+      <div class="node rule sm"><div class="t">③ 좌표 거리 계산</div><div class="d">POI 위경도 × 역사 정보 114역 위경도</div></div>
+      <div class="arrow short"><span class="lab">도보 접근 가능 거리 내</span></div>
+      <div class="node rule sm"><div class="t">④ 교집합만 남김</div><div class="d">보관함 보유 역 인근 POI = 추천 후보</div></div>
+
+      <div class="arrow"></div>
+      <div class="node llm"><div class="t">결과 조합 → 사용자 언어로 답변</div><div class="d">관광지 설명은 API 공식 번역문 인용, 연결 문장만 생성</div></div>
+      <div class="arrow short"></div>
+      <div class="node out"><div class="t">관광지 3~5곳 제시</div><div class="d">각 후보에 인근 역 · 도보 시간 · 해당 역 특대형 칸수 병기</div></div>
+
+      <div class="strip">
+        <span class="pill">부산테마여행 API</span>
+        <span class="pill">역사 정보 114역</span>
+        <span class="pill">물품보관함 71개 역</span>
+        <span class="pill b">큐레이션 태그</span>
+      </div>
+    </div>
+
+    <div class="note blue">
+      <b>이 순서가 핵심입니다.</b> ①에서 보관함 보유 역을 먼저 확정하기 때문에, "추천했는데 근처에 짐 맡길 데가 없다"는 실패가 구조적으로 발생하지 않습니다.
+    </div>
+  </section>
+
+  <!-- 4. 기능2 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 02</div>
+      <h2>짐 보관 옵션 — 픽업과 보관함 병렬 조회</h2>
+      <p>두 수단을 동시에 조회해 후보로 나란히 놓고, 사용자가 근거를 보고 고릅니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node user"><div class="t">"남포동 갈 건데 캐리어는 어떡하지?"</div><div class="d">숙소명이 있으면 함께 입력</div></div>
+      <div class="arrow"></div>
+      <div class="node llm"><div class="t">도구 2개 동시 호출</div><div class="d">픽업 가능 판단 + 보관소 조회</div></div>
+
+      <div class="branch">
+        <div class="bar"></div>
+        <div class="cols">
+          <div>
+            <div class="bl">경로 A — 짐캐리 픽업</div>
+            <div class="node tool"><div class="t">픽업 가능 판단</div><div class="d">입력 숙소명을 등록 숙소 목록과 대조</div></div>
+            <div class="arrow short"></div>
+            <div class="node rule"><div class="t">가능 여부 · 마감 시각 계산</div><div class="d">권역별 운영 규칙 테이블</div></div>
+          </div>
+          <div>
+            <div class="bl">경로 B — 역내 물품보관함</div>
+            <div class="node tool"><div class="t">보관소 조회</div><div class="d">선택 관광지 인근 역의 보관함 조회</div></div>
+            <div class="arrow short"></div>
+            <div class="node rule"><div class="t">특대형 칸수 · 거리순 정렬</div><div class="d">상위 1~3개로 제한</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="merge"><span class="up l"></span><span class="up r"></span></div>
+
+      <div class="node llm"><div class="t">두 결과를 하나의 답변으로 조합</div><div class="d">픽업 가능 시 함께 제시, 불가 시 보관함만 제시</div></div>
+      <div class="arrow short"></div>
+      <div class="node out"><div class="t">보관 옵션 카드 제시</div><div class="d">위치 · 보유 칸수 · 요금 · 상세위치({층, 출입구} 파싱)</div></div>
+
+      <div class="strip">
+        <span class="pill">픽업 가능 숙소 목록</span>
+        <span class="pill">물품보관함 71개 역</span>
+        <span class="pill b">운영 규칙 테이블</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>표기 원칙.</b> 제시하는 수치는 '보유 칸수'이며 실시간 잔여가 아닙니다. 답변과 카드에 이를 명시해 오해를 차단합니다.
+    </div>
+  </section>
+
+  <!-- 5. 기능3 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 03</div>
+      <h2>혼잡도 병기 — 언제 옮길지</h2>
+      <p>별도 화면이 아니라 보관소 카드에 딸려 나오는 맥락으로 설계합니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node data" style="min-width:420px;"><div class="t">사전 배치 작업 (서비스 기동 전 1회)</div></div>
+      <div class="arrow short"></div>
+      <div class="node rule sm"><div class="t">승하차 81,760행 로드</div><div class="d">인코딩 자동 감지 · 역명 정규화 · 역번호 매핑</div></div>
+      <div class="arrow short"></div>
+      <div class="node rule sm"><div class="t">역 × 요일 × 시간대 집계</div><div class="d">공휴일 구분 컬럼 포함</div></div>
+      <div class="arrow short"></div>
+      <div class="node rule sm"><div class="t">4등급 변환</div><div class="d">여유 · 보통 · 혼잡 · 심함</div></div>
+
+      <div class="arrow"><span class="lab">이하 실시간 — 보관소 조회 시 자동 결합</span></div>
+
+      <div class="node tool"><div class="t">혼잡도 조회</div><div class="d">보관소 후보 역 + 예상 이용 시간대</div></div>
+      <div class="arrow short"></div>
+      <div class="node llm"><div class="t">과거형으로 서술</div><div class="d">"혼잡했어요"(통계) — "혼잡할 거예요"(예측) 아님</div></div>
+      <div class="arrow short"></div>
+      <div class="node out"><div class="t">보관소 카드에 혼잡 정보 병기</div><div class="d">"남포역은 주말 14~17시가 혼잡했어요. 오전을 추천해요."</div></div>
+
+      <div class="strip">
+        <span class="pill">승하차 81,760행 · 결측 0</span>
+        <span class="pill">역사 정보 114역</span>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>1단계는 통계, 2단계는 예측.</b> 지금은 과거 전수 통계로 정직하게 제공하고, 학습 기반 예측 모델은 같은 자리에 교체 투입하는 확장 과제로 둡니다.
+    </div>
+  </section>
+
+  <!-- 6. 기능4 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 04</div>
+      <h2>이용 방법 질의응답 — RAG</h2>
+      <p>답변 범위를 넓히는 기능이 아니라 좁히는 기능입니다. 목적은 환각 차단입니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node user"><div class="t">"픽업은 어떻게 신청해? 요금은?"</div></div>
+      <div class="arrow"></div>
+      <div class="node llm"><div class="t">문서 검색 도구 호출</div><div class="d">질문을 검색 쿼리로 변환</div></div>
+      <div class="arrow short"></div>
+      <div class="node tool"><div class="t">지식베이스 검색</div><div class="d">숙소 픽업 · 무인 보관 · 짐 배송 · FAQ — 주제 단위 분할</div></div>
+
+      <div class="branch">
+        <div class="bar"></div>
+        <div class="cols">
+          <div>
+            <div class="bl">근거 문서 있음</div>
+            <div class="node out"><div class="t">근거와 함께 답변</div><div class="d">검색된 문서 조각 + 출처 · 기준 시점 표기</div></div>
+          </div>
+          <div>
+            <div class="bl">근거 문서 없음</div>
+            <div class="node warn"><div class="t">"확인이 필요해요"</div><div class="d">지어내지 않고 경계를 밝힘 · 공식 채널 안내</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="strip" style="margin-top:32px;">
+        <span class="pill">짐캐리 이용 안내 (공개 정보 문서화)</span>
+        <span class="pill">보관함 이용 안내</span>
+      </div>
+    </div>
+
+    <div class="note blue">
+      <b>요금 · 마감시간은 절대 생성하지 않습니다.</b> 이 두 값이 틀리면 사용자가 실제로 짐을 못 맡기게 되므로, 문서 근거가 없으면 답하지 않는 쪽을 택합니다.
+    </div>
+  </section>
+
+  <!-- 7. 기능5 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 05</div>
+      <h2>다국어 처리 — 번역이 필요한 곳과 아닌 곳</h2>
+      <p>정보 유형에 따라 처리 경로를 나눠, 사실 정보의 오역을 구조적으로 차단합니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="node user"><div class="t">사용자 언어 감지</div><div class="d">한국어 · 일본어 · 영어</div></div>
+      <div class="arrow"><span class="lab">답변 재료를 유형별로 분리</span></div>
+
+      <div class="branch three">
+        <div class="bar"></div>
+        <div class="cols">
+          <div>
+            <div class="bl">관광지 정보</div>
+            <div class="node rule"><div class="t">공식 원문 인용</div><div class="d">API의 국문 / 영문 / 일문 엔드포인트를 언어에 맞춰 호출</div></div>
+          </div>
+          <div>
+            <div class="bl">칸수 · 요금 · 시각</div>
+            <div class="node rule"><div class="t">원본 수치 그대로</div><div class="d">번역 대상 아님 — 숫자 · 단위는 변형 금지</div></div>
+          </div>
+          <div>
+            <div class="bl">연결 · 설명 문장</div>
+            <div class="node llm"><div class="t">LLM이 생성</div><div class="d">사실이 아닌 서술 영역만 담당</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="merge three"><span class="up l"></span><span class="up r"></span></div>
+
+      <div class="node rule"><div class="t">고유명사 원문 병기 규칙 적용</div><div class="d">역명 · 관광지명은 현장 표지판과 대조 가능하도록</div></div>
+      <div class="arrow short"></div>
+      <div class="node out"><div class="t">사용자 언어로 최종 답변</div><div class="d">南浦駅 特大 56ロッカー、6,000ウォン / 3時間</div></div>
+
+      <div class="strip">
+        <span class="pill b">getRecommendedKr / En / Ja</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. 예외 -->
+  <section>
+    <div class="sec-head">
+      <div class="sec-no">FLOW 06</div>
+      <h2>예외 처리 — 막히는 지점마다 다음 경로가 있습니다</h2>
+      <p>이탈로 끝나는 분기를 남기지 않는 것이 설계 목표입니다.</p>
+    </div>
+
+    <div class="flow">
+      <div class="branch nobar" style="margin-bottom:8px;">
+        <div class="cols">
+          <div>
+            <div class="node warn sm" style="width:100%;"><div class="t">숙소가 등록 343개 밖</div></div>
+            <div class="arrow short"></div>
+            <div class="node out sm" style="width:100%;"><div class="t">보관함 경로로 자동 전환</div><div class="d">픽업 불가가 이탈이 아니라 선택지 축소로 끝남</div></div>
+          </div>
+          <div>
+            <div class="node warn sm" style="width:100%;"><div class="t">인근 역에 보관함 없음</div></div>
+            <div class="arrow short"></div>
+            <div class="node out sm" style="width:100%;"><div class="t">보관함 보유 인근 역 재제안</div><div class="d">한 정거장 거리 내 대안 역 안내</div></div>
+          </div>
+          <div>
+            <div class="node warn sm" style="width:100%;"><div class="t">문서에 없는 질문</div></div>
+            <div class="arrow short"></div>
+            <div class="node out sm" style="width:100%;"><div class="t">"확인이 필요해요"</div><div class="d">추측 대신 공식 채널 연결</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="note">
+      <b>실시간 잔여 정보의 한계.</b> 보관함이 실제로 비어 있는지는 데이터에 없습니다. 따라서 '보유 칸수'임을 명시하고,
+      혼잡 통계는 참고 지표로만 표기합니다 — 데모에서도 이 구분을 선제적으로 밝힙니다.
+    </div>
+  </section>
+
+  <div class="foot">반나절 · はんにち · Half Day &nbsp;|&nbsp; 팀 BWave &nbsp;|&nbsp; 부산 DIVE 2026</div>
+
+</div>
+</body>
+</html>

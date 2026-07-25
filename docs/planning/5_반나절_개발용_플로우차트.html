@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>반나절 — 개발용 플로우차트 (Mermaid)</title>
+<style>
+:root{
+  --blue:#3182F6; --blue-bg:#E8F2FE; --blue-dk:#1B64DA;
+  --ink:#191F28; --sub:#4E5968; --gray:#8B95A1; --line:#D1D6DB;
+  --bg:#F2F4F6; --card:#FFFFFF;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;
+  background:var(--bg); color:var(--ink); line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:72px 32px 120px;}
+
+.head{margin-bottom:56px;}
+.head .kicker{font-size:15px;font-weight:700;color:var(--blue);margin-bottom:14px;}
+.head h1{font-size:42px;font-weight:800;letter-spacing:-1.4px;line-height:1.3;}
+.head p{font-size:17px;color:var(--sub);margin-top:16px;letter-spacing:-.3px;}
+
+section{background:var(--card);border-radius:26px;padding:44px 40px;margin-bottom:24px;}
+.sec-no{display:inline-block;font-size:12.5px;font-weight:800;color:var(--blue);background:var(--blue-bg);
+  border-radius:999px;padding:6px 14px;margin-bottom:14px;letter-spacing:.3px;}
+section h2{font-size:26px;font-weight:800;letter-spacing:-.8px;}
+section > p.desc{font-size:15.5px;color:var(--gray);margin-top:9px;letter-spacing:-.3px;}
+
+.diagram{margin-top:32px;background:#FCFCFD;border:1px solid #EDEFF2;border-radius:18px;padding:26px 18px;overflow-x:auto;}
+.mermaid{display:flex;justify-content:center;min-width:0;}
+
+table{width:100%;border-collapse:collapse;margin-top:28px;font-size:14px;}
+th{text-align:left;font-size:12px;font-weight:800;color:var(--gray);letter-spacing:.3px;
+  padding:0 12px 10px;border-bottom:2px solid #E5E8EB;text-transform:uppercase;}
+td{padding:14px 12px;border-bottom:1px solid #EDEFF2;vertical-align:top;color:var(--sub);letter-spacing:-.2px;}
+td:first-child{color:var(--ink);font-weight:700;}
+code{font-family:'SF Mono',ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;
+  background:var(--bg);color:var(--blue-dk);border-radius:5px;padding:2px 6px;}
+td code{white-space:nowrap;}
+
+.note{margin-top:28px;background:var(--bg);border-radius:14px;padding:18px 22px;font-size:14.5px;
+  color:var(--sub);letter-spacing:-.3px;line-height:1.75;}
+.note b{color:var(--ink);}
+.note.warn{background:#FFF8EC;color:#8A5A12;} .note.warn b{color:#6B430A;}
+
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+.lg{display:flex;align-items:center;gap:9px;font-size:13.5px;color:var(--sub);font-weight:600;}
+.sh{width:34px;height:24px;border:2px solid;border-radius:5px;}
+.sh.io{background:#F2F4F6;border-color:#D1D6DB;transform:skewX(-14deg);}
+.sh.dec{background:#FFF4E6;border-color:#F2A63B;transform:rotate(45deg) scale(.72);border-radius:3px;}
+.sh.tool{background:#3182F6;border-color:#1B64DA;}
+.sh.db{background:#191F28;border-color:#191F28;border-radius:12px/6px;}
+.sh.out{background:#E8F2FE;border-color:#3182F6;}
+.sh.err{background:#FFEDED;border-color:#F26666;}
+
+#fallback{display:none;background:#FFEDED;color:#C33;border-radius:14px;padding:18px 22px;
+  font-size:14.5px;margin-bottom:24px;}
+.foot{text-align:center;font-size:13.5px;color:var(--gray);margin-top:10px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <div class="kicker">부산 DIVE 2026 · 팀 BWave</div>
+    <h1>반나절 — 개발용 플로우차트</h1>
+    <p>사용자 행동을 기점으로 한 분기 처리, 도구 입력값, 예외 경로를 Mermaid로 정의한 구현 참고 문서입니다.</p>
+  </div>
+
+  <div id="fallback">
+    Mermaid 로딩에 실패했습니다. 인터넷 연결을 확인하거나, <code>&lt;script&gt;</code> 태그의 CDN 주소를 사내망에서 접근 가능한 주소로 교체해 주세요.
+  </div>
+
+  <!-- 범례 -->
+  <section>
+    <div class="sec-no">LEGEND</div>
+    <h2>도형 규칙</h2>
+    <p class="desc">Mermaid 표준 도형을 그대로 사용합니다.</p>
+    <div class="legend">
+      <div class="lg"><div class="sh io"></div>입력 · 출력값 (평행사변형)</div>
+      <div class="lg"><div class="sh dec"></div>분기 처리 (마름모)</div>
+      <div class="lg"><div class="sh tool"></div>도구 호출 · 처리</div>
+      <div class="lg"><div class="sh db"></div>데이터 소스 (원통)</div>
+      <div class="lg"><div class="sh out"></div>사용자 응답</div>
+      <div class="lg"><div class="sh err"></div>예외 · 폴백</div>
+    </div>
+  </section>
+
+  <!-- FLOW 00 -->
+  <section>
+    <div class="sec-no">FLOW 00</div>
+    <h2>진입 · 의도 라우팅</h2>
+    <p class="desc">접속 직후 사용자가 취할 수 있는 행동을 의도로 분류해 해당 플로우로 보냅니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  S(("사용자 접속")) --> L[/"언어 감지&lt;br&gt;lang: ko / ja / en"/]
+  L --> CTX[("세션 컨텍스트 로드&lt;br&gt;hotel_name, poi_id, station_id, visit_at")]
+  CTX --> U[/"사용자 발화&lt;br&gt;utterance: string"/]
+  U --> I{"의도 분류"}
+
+  I -->|"POI_ASK&lt;br&gt;어디 갈까"| F1["FLOW 01&lt;br&gt;관광지 추천"]
+  I -->|"STORAGE_ASK&lt;br&gt;어디 맡길까"| F2["FLOW 02&lt;br&gt;짐 보관 옵션"]
+  I -->|"TIME_ASK&lt;br&gt;언제 옮길까"| F3["FLOW 03&lt;br&gt;혼잡도 조회"]
+  I -->|"HOWTO_ASK&lt;br&gt;어떻게 쓸까"| F4["FLOW 04&lt;br&gt;이용 방법 RAG"]
+  I -->|"UNKNOWN"| RQ["명확화 재질문&lt;br&gt;선택지 3개 제시"]
+
+  RQ --> U
+  F1 --> M["응답 조합&lt;br&gt;FLOW 05 다국어 렌더"]
+  F2 --> M
+  F3 --> M
+  F4 --> M
+  M --> R[/"응답 출력&lt;br&gt;text + cards + sources"/]
+  R --> SAVE[("세션 컨텍스트 갱신")]
+  SAVE --> U
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class L,U,R io
+  class I dec
+  class F1,F2,F3,F4,M tool
+  class CTX,SAVE db
+  class RQ err
+    </pre></div>
+
+    <table>
+      <tr><th>의도</th><th>트리거 예시</th><th>필요 컨텍스트</th><th>없을 때</th></tr>
+      <tr><td>POI_ASK</td><td>"마지막 날 어디가 좋아?"</td><td>없음</td><td>바로 진입 가능</td></tr>
+      <tr><td>STORAGE_ASK</td><td>"짐 어디 맡겨?"</td><td><code>poi_id</code> 또는 <code>hotel_name</code></td><td>목적지 되묻기</td></tr>
+      <tr><td>TIME_ASK</td><td>"몇 시에 가는 게 좋아?"</td><td><code>station_id</code></td><td>직전 추천 역 사용</td></tr>
+      <tr><td>HOWTO_ASK</td><td>"픽업 어떻게 신청해?"</td><td>없음</td><td>바로 진입 가능</td></tr>
+    </table>
+
+    <div class="note">
+      <b>진입 순서를 강제하지 않습니다.</b> 어느 의도로 들어와도 세션 컨텍스트에 슬롯이 채워지며, 부족한 슬롯만 되물어 채웁니다.
+    </div>
+  </section>
+
+  <!-- FLOW 01 -->
+  <section>
+    <div class="sec-no">FLOW 01</div>
+    <h2>관광지 추천 — 역방향 필터</h2>
+    <p class="desc">보관함 보유 역 집합을 먼저 확정한 뒤 그 인근 POI만 후보로 남깁니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  IN[/"입력&lt;br&gt;region?: string&lt;br&gt;theme?: string&lt;br&gt;duration_min?: int = 240&lt;br&gt;lang: ko / ja / en"/] --> V{"파라미터 유효?"}
+  V -->|"아니오"| DEF["기본값 적용&lt;br&gt;region=ALL, duration=240"]
+  V -->|"예"| S1
+  DEF --> S1
+
+  S1["1. 보관함 보유 역 집합 확정"] --> DB1[("locker_station&lt;br&gt;71개 역")]
+  DB1 --> S1F{"특대형 칸수 &gt; 0 ?"}
+  S1F -->|"아니오"| EXC["역 제외"]
+  S1F -->|"예"| STSET[/"station_set: 역번호 배열"/]
+
+  STSET --> S2["2. POI 후보 조회"]
+  S2 --> CH{"캐시 히트?"}
+  CH -->|"예"| POI
+  CH -->|"아니오"| API[("부산테마여행 API&lt;br&gt;getRecommendedKr / En / Ja")]
+  API --> POI[/"poi_raw: LAT, LNG, MAIN_TITLE, CATE2_NM"/]
+
+  POI --> S3["3. Haversine 거리 계산&lt;br&gt;POI x station_set"]
+  S3 --> S3F{"최근접 역 거리&lt;br&gt;≤ 1.0km ?"}
+  S3F -->|"아니오"| DROP["후보 제외"]
+  S3F -->|"예"| S4["4. 큐레이션 태그 필터&lt;br&gt;반나절 적합성"]
+
+  S4 --> CNT{"후보 수 ≥ 1 ?"}
+  CNT -->|"아니오"| RETRY{"재탐색 1회&lt;br&gt;수행함?"}
+  RETRY -->|"아니오"| WIDEN["반경 1.5km로 확대"]
+  WIDEN --> S3
+  RETRY -->|"예"| EMPTY["결과 없음 응답&lt;br&gt;다른 지역 제안"]
+  CNT -->|"예"| OUT[/"출력&lt;br&gt;poi_list: 3~5건&lt;br&gt;각 건에 station_id, walk_min, xl_locker_count"/]
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class IN,STSET,POI,OUT io
+  class V,S1F,CH,S3F,CNT,RETRY dec
+  class S1,S2,S3,S4,DEF,WIDEN tool
+  class DB1,API db
+  class EXC,DROP,EMPTY err
+    </pre></div>
+
+    <div class="note warn">
+      <b>구현 주의.</b> 역사 정보 CSV의 <code>위도</code> 컬럼에 경도값이, <code>경도</code> 컬럼에 위도값이 들어 있습니다.
+      로더에서 교차 매핑하지 않으면 3번 거리 계산이 전부 오작동합니다. FLOW 07 참고.
+    </div>
+  </section>
+
+  <!-- FLOW 02 -->
+  <section>
+    <div class="sec-no">FLOW 02</div>
+    <h2>짐 보관 옵션 — 픽업 · 보관함 병렬 조회</h2>
+    <p class="desc">두 경로를 독립 실행하고, 결과 조합 시점에 어떤 카드를 노출할지 결정합니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  IN[/"입력&lt;br&gt;poi_id: string&lt;br&gt;hotel_name?: string&lt;br&gt;visit_at?: datetime"/] --> HAS{"hotel_name&lt;br&gt;있음?"}
+
+  HAS -->|"예"| A1["A. 픽업 가능 판단"]
+  HAS -->|"아니오"| ASKIP["픽업 경로 스킵&lt;br&gt;reason=NO_HOTEL"]
+
+  A1 --> ADB[("pickup_hotel&lt;br&gt;등록 숙소 343")]
+  ADB --> AM{"숙소명 매칭?&lt;br&gt;정규화 후 비교"}
+  AM -->|"아니오"| AX1["픽업 불가&lt;br&gt;reason=UNREGISTERED"]
+  AM -->|"예"| AT{"현재 시각 &lt; 마감?"}
+  AT -->|"아니오"| AX2["픽업 불가&lt;br&gt;reason=DEADLINE_PASSED"]
+  AT -->|"예"| AOK[/"pickup: 가능&lt;br&gt;slot_time, deadline"/]
+
+  IN --> B1["B. 보관소 조회"]
+  B1 --> BDB[("locker_station&lt;br&gt;71개 역")]
+  BDB --> B2["POI 인근 역 필터&lt;br&gt;거리순 정렬"]
+  B2 --> BF{"특대형 보유 역&lt;br&gt;존재?"}
+  BF -->|"아니오"| BX["인근 보관함 없음&lt;br&gt;한 정거장 확대 재탐색"]
+  BX --> BF
+  BF -->|"예"| BTOP["상위 1~3개 절단"]
+  BTOP --> BCON["FLOW 03 혼잡도 결합"]
+  BCON --> BOK[/"lockers: 1~3건&lt;br&gt;station, xl_count, fee, detail_loc"/]
+
+  AOK --> MERGE{"결과 조합 판정"}
+  AX1 --> MERGE
+  AX2 --> MERGE
+  ASKIP --> MERGE
+  BOK --> MERGE
+
+  MERGE -->|"픽업 가능 + 보관함"| R1[/"두 옵션 병렬 카드"/]
+  MERGE -->|"픽업 불가 + 보관함"| R2[/"보관함 카드 + 불가 사유"/]
+  MERGE -->|"보관함 없음"| R3["대안 역 안내 응답"]
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class IN,AOK,BOK io
+  class HAS,AM,AT,BF,MERGE dec
+  class A1,B1,B2,BTOP,BCON tool
+  class ADB,BDB db
+  class R1,R2 out
+  class AX1,AX2,ASKIP,BX,R3 err
+    </pre></div>
+
+    <table>
+      <tr><th>불가 사유 코드</th><th>조건</th><th>사용자 응답</th></tr>
+      <tr><td><code>NO_HOTEL</code></td><td>숙소명 미입력</td><td>보관함만 제시, 숙소 입력 유도</td></tr>
+      <tr><td><code>UNREGISTERED</code></td><td>등록 숙소 343개에 없음</td><td>보관함 경로로 자동 전환</td></tr>
+      <tr><td><code>DEADLINE_PASSED</code></td><td>당일 수거 마감 경과</td><td>보관함 + 익일 픽업 안내</td></tr>
+    </table>
+  </section>
+
+  <!-- FLOW 03 -->
+  <section>
+    <div class="sec-no">FLOW 03</div>
+    <h2>혼잡도 조회 — 배치 집계 + 실시간 결합</h2>
+    <p class="desc">집계는 기동 전 1회, 조회는 보관소 카드 생성 시점에 결합합니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  subgraph BATCH ["사전 배치 · 서비스 기동 전 1회"]
+    B0[("승하차 CSV&lt;br&gt;81,760행 · 2025")] --> B1["인코딩 감지 로드&lt;br&gt;UTF-8 / CP949"]
+    B1 --> B2["역명 정규화&lt;br&gt;부산 → 부산역 등"]
+    B2 --> B3["역번호 기준 조인&lt;br&gt;112개 역번호"]
+    B3 --> B4["역 x 요일 x 시간대 집계&lt;br&gt;공휴일 플래그 포함"]
+    B4 --> B5{"표본 수 ≥ 30 ?"}
+    B5 -->|"아니오"| B6["등급 산출 제외&lt;br&gt;정보 없음 표기"]
+    B5 -->|"예"| B7["4등급 변환&lt;br&gt;여유 / 보통 / 혼잡 / 심함"]
+    B7 --> B8[("congestion_grade&lt;br&gt;사전 집계 테이블")]
+  end
+
+  IN[/"입력&lt;br&gt;station_id: int&lt;br&gt;weekday: int&lt;br&gt;hour: int"/] --> Q{"집계 테이블에&lt;br&gt;해당 키 존재?"}
+  B8 -.-> Q
+  Q -->|"아니오"| NA["정보 없음 반환&lt;br&gt;혼잡 문구 생략"]
+  Q -->|"예"| G[/"출력&lt;br&gt;grade: 1~4&lt;br&gt;sample_days: int"/]
+  G --> W["과거형 문구 생성&lt;br&gt;혼잡했어요"]
+  W --> OUT[/"보관소 카드에 병기"/]
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class IN,G io
+  class B5,Q dec
+  class B1,B2,B3,B4,B7,W tool
+  class B0,B8 db
+  class OUT out
+  class B6,NA err
+    </pre></div>
+
+    <div class="note">
+      <b>표현 규칙을 코드로 강제합니다.</b> 이 도구의 반환값은 과거 통계이므로, 응답 템플릿에서 미래형 어미를 쓰지 못하도록 문구를 고정합니다.
+      예측 모델로 교체할 때 이 템플릿만 바꾸면 됩니다.
+    </div>
+  </section>
+
+  <!-- FLOW 04 -->
+  <section>
+    <div class="sec-no">FLOW 04</div>
+    <h2>이용 방법 RAG — 근거 없으면 답하지 않음</h2>
+    <p class="desc">유사도 임계값을 넘지 못하면 생성으로 넘어가지 않고 즉시 경계 응답을 냅니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  IN[/"입력&lt;br&gt;question: string&lt;br&gt;lang: ko / ja / en"/] --> EMB["질문 임베딩 변환"]
+  EMB --> SR["벡터 검색&lt;br&gt;top_k = 5"]
+  SR --> KB[("지식베이스&lt;br&gt;픽업 / 무인보관 / 배송 / FAQ")]
+  KB --> TH{"최고 유사도&lt;br&gt;≥ threshold ?"}
+
+  TH -->|"아니오"| NF["경계 응답&lt;br&gt;확인이 필요해요&lt;br&gt;공식 채널 링크"]
+  TH -->|"예"| CHK{"요금 · 마감시간&lt;br&gt;포함 질문?"}
+
+  CHK -->|"예"| STRICT{"문서에 해당 수치&lt;br&gt;명시되어 있음?"}
+  STRICT -->|"아니오"| NF
+  STRICT -->|"예"| GEN
+  CHK -->|"아니오"| GEN["근거 기반 답변 생성&lt;br&gt;문서 조각 인용"]
+
+  GEN --> META["출처 · 기준 시점 부착"]
+  META --> OUT[/"출력&lt;br&gt;answer, sources[], as_of"/]
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class IN,OUT io
+  class TH,CHK,STRICT dec
+  class EMB,SR,GEN,META tool
+  class KB db
+  class NF err
+    </pre></div>
+
+    <div class="note warn">
+      <b>이중 게이트입니다.</b> 유사도 통과 후에도 요금 · 마감시간 질문이면 해당 수치가 문서에 명시되어 있는지 한 번 더 확인합니다.
+      이 두 값은 틀리면 사용자가 실제로 짐을 맡기지 못하게 되므로 별도 게이트를 둡니다.
+    </div>
+  </section>
+
+  <!-- FLOW 05 -->
+  <section>
+    <div class="sec-no">FLOW 05</div>
+    <h2>다국어 렌더링 — 재료별 처리 경로 분기</h2>
+    <p class="desc">응답 조립 직전, 각 재료를 유형에 따라 다른 경로로 처리합니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  IN[/"입력&lt;br&gt;materials[]: 도구 반환값 모음&lt;br&gt;lang: ko / ja / en"/] --> LOOP{"재료 유형 판정"}
+
+  LOOP -->|"관광지 텍스트"| P1{"lang = ko ?"}
+  P1 -->|"예"| P1K["getRecommendedKr 원문"]
+  P1 -->|"아니오"| P1F{"해당 언어&lt;br&gt;엔드포인트 존재?"}
+  P1F -->|"예"| P1X["getRecommendedEn / Ja 원문"]
+  P1F -->|"아니오"| P1B["국문 원문 + 병기 표기"]
+
+  LOOP -->|"수치 · 요금 · 시각"| P2["원본 그대로 통과&lt;br&gt;번역 금지"]
+  LOOP -->|"고유명사"| P3["원문 병기 규칙 적용&lt;br&gt;南浦駅 형식"]
+  LOOP -->|"연결 문장"| P4["LLM 생성&lt;br&gt;사용자 언어"]
+
+  P1K --> ASM
+  P1X --> ASM
+  P1B --> ASM
+  P2 --> ASM
+  P3 --> ASM
+  P4 --> ASM["응답 조립"]
+
+  ASM --> VAL{"수치 무결성 검증&lt;br&gt;입력 = 출력 ?"}
+  VAL -->|"아니오"| FIX["원본 수치로 복원&lt;br&gt;로그 기록"]
+  FIX --> ASM
+  VAL -->|"예"| OUT[/"최종 응답"/]
+
+  classDef io fill:#F2F4F6,stroke:#D1D6DB,color:#4E5968
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef out fill:#E8F2FE,stroke:#3182F6,color:#1B64DA
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class IN,OUT io
+  class LOOP,P1,P1F,VAL dec
+  class P1K,P1X,P1B,P2,P3,P4,ASM tool
+  class FIX err
+    </pre></div>
+
+    <div class="note">
+      <b>수치 무결성 검증을 마지막에 한 번 더 겁니다.</b> LLM이 연결 문장을 쓰는 과정에서 숫자를 바꿔 쓸 여지를 없애기 위해,
+      조립된 응답의 수치가 도구 반환값과 일치하는지 대조합니다.
+    </div>
+  </section>
+
+  <!-- FLOW 06 -->
+  <section>
+    <div class="sec-no">FLOW 06</div>
+    <h2>사용자 행동 · 상태 전이</h2>
+    <p class="desc">대화 중 사용자가 취할 수 있는 행동과 그에 따른 세션 슬롯 변화입니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+stateDiagram-v2
+  [*] --> 진입
+  진입 --> 탐색: 관광지 질문
+  진입 --> 보관검토: 짐 질문
+  진입 --> 안내: 이용법 질문
+
+  탐색 --> 탐색: 다른 지역 요청
+  탐색 --> 보관검토: 목적지 확정&lt;br&gt;poi_id 확정
+
+  보관검토 --> 보관검토: 다른 역 요청
+  보관검토 --> 시간검토: 혼잡 질문
+  보관검토 --> 선택완료: 보관소 선택&lt;br&gt;station_id 확정
+
+  시간검토 --> 보관검토: 다른 시간대 재조회
+  시간검토 --> 선택완료: 시각 확정
+
+  선택완료 --> 안내: 이용 방법 질문
+  안내 --> 안내: 후속 질문
+  안내 --> 선택완료: 다른 보관소로 변경
+
+  선택완료 --> [*]: 대화 종료
+  안내 --> [*]: 대화 종료
+    </pre></div>
+
+    <table>
+      <tr><th>상태</th><th>확정 슬롯</th><th>가능한 행동</th></tr>
+      <tr><td>진입</td><td><code>lang</code></td><td>관광지 · 짐 · 이용법 중 아무거나 질문</td></tr>
+      <tr><td>탐색</td><td><code>lang</code></td><td>목적지 확정, 다른 지역 재요청</td></tr>
+      <tr><td>보관검토</td><td>+ <code>poi_id</code></td><td>보관소 선택, 혼잡 질문, 다른 역 요청</td></tr>
+      <tr><td>시간검토</td><td>+ <code>poi_id</code></td><td>시각 확정, 다른 시간대 재조회</td></tr>
+      <tr><td>선택완료</td><td>+ <code>station_id</code>, <code>visit_at</code></td><td>이용법 질문, 보관소 변경</td></tr>
+    </table>
+  </section>
+
+  <!-- FLOW 07 -->
+  <section>
+    <div class="sec-no">FLOW 07</div>
+    <h2>데이터 적재 파이프라인</h2>
+    <p class="desc">실측으로 확인한 원본 데이터 결함을 교정하는 단계입니다. 서비스 기동 전 1회 실행합니다.</p>
+
+    <div class="diagram"><pre class="mermaid">
+flowchart TD
+  R1[("역사 정보 CSV&lt;br&gt;114역 · CP949")] --> E1["인코딩 감지 로드"]
+  R2[("승하차 CSV&lt;br&gt;81,760행 · UTF-8")] --> E1
+  R3[("물품보관함 CSV&lt;br&gt;24역 샘플 · CP949")] --> E1
+  R4[("공공데이터포털&lt;br&gt;보관함 71개 역")] --> E1
+
+  E1 --> C1{"위경도 값 범위&lt;br&gt;정상?"}
+  C1 -->|"위도가 128~129"| SWAP["컬럼 교차 매핑&lt;br&gt;위도 ↔ 경도"]
+  C1 -->|"정상"| N1
+  SWAP --> N1["역명 정규화"]
+
+  N1 --> C2{"역명 조인 성공?"}
+  C2 -->|"아니오"| ALIAS["별칭 사전 적용&lt;br&gt;부산=부산역&lt;br&gt;가운뎃점 제거"]
+  ALIAS --> C2
+  C2 -->|"예"| KEY["역번호 마스터 키 부여"]
+
+  KEY --> C3{"보관함 커버리지&lt;br&gt;확인"}
+  C3 -->|"미커버 역"| MARK["정보 없음 플래그"]
+  C3 -->|"커버"| PARSE["상세위치 파싱&lt;br&gt;층 · 출입구 구조화"]
+  MARK --> LOAD
+  PARSE --> LOAD[("서비스 DB 적재")]
+
+  classDef dec fill:#FFF4E6,stroke:#F2A63B,color:#8A5A12,font-weight:bold
+  classDef tool fill:#3182F6,stroke:#1B64DA,color:#ffffff
+  classDef db fill:#191F28,stroke:#191F28,color:#ffffff
+  classDef err fill:#FFEDED,stroke:#F26666,color:#C0392B
+
+  class C1,C2,C3 dec
+  class E1,N1,KEY,PARSE tool
+  class R1,R2,R3,R4,LOAD db
+  class SWAP,ALIAS,MARK err
+    </pre></div>
+
+    <table>
+      <tr><th>결함</th><th>실측 확인 내용</th><th>교정</th></tr>
+      <tr><td>위경도 반전</td><td><code>위도</code> 128.960~129.177 / <code>경도</code> 35.049~35.339</td><td>로더에서 컬럼 교차 매핑</td></tr>
+      <tr><td>역명 불일치</td><td>보관함 <code>부산</code> ↔ 승하차 <code>부산역</code></td><td>별칭 사전 + 역번호 조인</td></tr>
+      <tr><td>특수문자</td><td><code>국제금융센터ㆍ부산은행</code> 가운뎃점 유무</td><td>정규화 시 구분자 제거</td></tr>
+      <tr><td>인코딩 혼재</td><td>역사 · 보관함 CP949 / 승하차 UTF-8</td><td>자동 감지 로더</td></tr>
+      <tr><td>역 카운트 차이</td><td>역번호 112개 vs 역명 108개</td><td>집계는 역번호, 표기는 역명</td></tr>
+    </table>
+  </section>
+
+  <!-- 도구 스키마 -->
+  <section>
+    <div class="sec-no">SCHEMA</div>
+    <h2>도구 입출력 정의</h2>
+    <p class="desc">LLM Function Calling에 등록할 4개 도구의 시그니처입니다.</p>
+
+    <table>
+      <tr><th>도구</th><th>입력</th><th>출력</th><th>실패 시</th></tr>
+      <tr>
+        <td>recommend_poi</td>
+        <td><code>region?</code> <code>theme?</code> <code>duration_min?</code> <code>lang</code></td>
+        <td><code>poi_list[]</code> — poi_id, name, station_id, walk_min, xl_locker_count</td>
+        <td>빈 배열 + <code>reason</code></td>
+      </tr>
+      <tr>
+        <td>search_locker</td>
+        <td><code>poi_id</code> 또는 <code>station_id</code>, <code>limit=3</code></td>
+        <td><code>lockers[]</code> — station, xl_count, fee, detail_loc, distance_m</td>
+        <td>빈 배열 + 대안 역 후보</td>
+      </tr>
+      <tr>
+        <td>check_pickup</td>
+        <td><code>hotel_name</code>, <code>now: datetime</code></td>
+        <td><code>available: bool</code>, <code>deadline</code>, <code>slot_time</code></td>
+        <td><code>reason</code> 코드 반환</td>
+      </tr>
+      <tr>
+        <td>get_congestion</td>
+        <td><code>station_id</code>, <code>weekday</code>, <code>hour</code></td>
+        <td><code>grade: 1~4</code>, <code>sample_days</code></td>
+        <td><code>null</code> — 문구 생략</td>
+      </tr>
+    </table>
+
+    <div class="note">
+      <b>모든 도구는 실패 시에도 예외를 던지지 않고 사유 코드를 반환합니다.</b>
+      LLM이 실패를 대화로 설명할 수 있어야 하므로, 빈 결과와 오류를 구분해 전달합니다.
+    </div>
+  </section>
+
+  <div class="foot">반나절 · はんにち · Half Day &nbsp;|&nbsp; 팀 BWave &nbsp;|&nbsp; 부산 DIVE 2026</div>
+</div>
+
+<script>
+(function () {
+  // CDN 순차 폴백 — 앞의 것이 실패하면 다음으로 넘어간다
+  var SOURCES = [
+    'https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.1/mermaid.min.js',
+    'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js',
+    'https://unpkg.com/mermaid@11/dist/mermaid.min.js'
+  ];
+
+  function boot() {
+    mermaid.initialize({
+      startOnLoad: false,               // 수동 실행 — load 이후 초기화라도 확실히 그려지도록
+      securityLevel: 'loose',
+      theme: 'base',
+      flowchart: { curve: 'basis', nodeSpacing: 44, rankSpacing: 52, useMaxWidth: true },
+      themeVariables: {
+        fontFamily: "'Pretendard',-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif",
+        fontSize: '14px',
+        primaryColor: '#E8F2FE',
+        primaryTextColor: '#191F28',
+        primaryBorderColor: '#3182F6',
+        lineColor: '#8B95A1',
+        secondaryColor: '#F2F4F6',
+        tertiaryColor: '#FFFFFF',
+        edgeLabelBackground: '#FFFFFF'
+      }
+    });
+    mermaid.run({ querySelector: '.mermaid' }).catch(function (e) {
+      showError('다이어그램 렌더링 중 오류가 발생했습니다: ' + (e && e.message ? e.message : e));
+    });
+  }
+
+  function showError(msg) {
+    var el = document.getElementById('fallback');
+    if (el) { el.textContent = msg; el.style.display = 'block'; }
+    console.error('[mermaid]', msg);
+  }
+
+  function load(i) {
+    if (i >= SOURCES.length) {
+      showError('Mermaid를 불러오지 못했습니다. 네트워크를 확인하거나 mermaid.min.js를 로컬에 받아 script src를 교체해 주세요.');
+      return;
+    }
+    var s = document.createElement('script');
+    s.src = SOURCES[i];
+    s.onload = function () { window.mermaid ? boot() : load(i + 1); };
+    s.onerror = function () { load(i + 1); };
+    document.head.appendChild(s);
+  }
+
+  load(0);
+})();
+</script>
+</body>
+</html>
