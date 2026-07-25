@@ -10,7 +10,7 @@ export default function SourceSheet({ onClose }: { onClose: () => void }) {
   const { T, tr } = useLang();
   const r = RAG_FEE;
   return (
-    <BottomSheet onClose={onClose} scroll>
+    <BottomSheet onClose={onClose}>
       <div className="mb-3.5 flex items-center gap-2">
         <div className="flex h-[26px] w-[26px] items-center justify-center rounded-lg bg-heritage-bg text-[#8A6516]">
           <DocIcon size={15} />

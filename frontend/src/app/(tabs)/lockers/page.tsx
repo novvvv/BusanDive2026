@@ -43,19 +43,20 @@ export default function LockersPage() {
 
       {/* 검색 + 필터 */}
       <div className="flex flex-none flex-col gap-2.5 border-b border-line bg-card px-3.5 py-3">
-        <div className="flex h-[42px] items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
+        <div className="flex h-11 items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
           <SearchIcon />
           <input
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={L.searchPh}
-            className="flex-1 bg-transparent text-[14px] text-ink outline-none"
+            /* 16px 미만이면 iOS가 포커스 시 강제 줌 */
+            className="w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
           />
         </div>
         <div className="hd-scroll flex gap-[7px] overflow-x-auto">
           <button
             onClick={() => setNear(!near)}
-            className={`flex min-h-8 flex-none items-center whitespace-nowrap rounded-full border px-[13px] text-[12px] font-semibold active:scale-[0.96] ${
+            className={`flex min-h-10 flex-none items-center whitespace-nowrap rounded-full border px-[15px] text-[12px] font-semibold active:scale-[0.96] ${
               near ? "border-primary bg-primary text-white" : "border-primary-line bg-white text-primary-dark"
             }`}
           >
@@ -68,11 +69,11 @@ export default function LockersPage() {
         <div className="flex flex-wrap items-center gap-2 px-0.5">
           {/* 사이즈 안내 팝오버 */}
           <details className="group relative">
-            <summary className="flex cursor-pointer list-none items-center gap-1 text-[10.5px] font-semibold text-primary-dark [&::-webkit-details-marker]:hidden">
+            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-[10.5px] font-semibold text-primary-dark [&::-webkit-details-marker]:hidden">
               <InfoIcon size={13} />
               {L.sizeInfo}
             </summary>
-            <div className="absolute left-0 top-5 z-overlay w-[158px] cursor-default rounded-xs border border-line bg-card px-[13px] py-[11px] shadow-raised">
+            <div className="absolute left-0 top-full z-overlay w-[158px] cursor-default rounded-xs border border-line bg-card px-[13px] py-[11px] shadow-raised">
               <div className="mb-[7px] text-[10px] text-gray">{L.sizeUnit}</div>
               {sizeRows.map((r) => (
                 <div key={r.k} className="flex items-center justify-between gap-2.5 py-[3px] text-[11.5px]">

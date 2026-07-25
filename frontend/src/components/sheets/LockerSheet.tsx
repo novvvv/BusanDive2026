@@ -45,7 +45,7 @@ export default function LockerSheet({
   };
 
   return (
-    <BottomSheet onClose={onClose} scroll>
+    <BottomSheet onClose={onClose}>
       <div className="mb-1 flex items-baseline gap-2">
         <span className="text-[21px] font-extrabold tracking-tight text-ink">{tr(st.name)}</span>
         {lang !== "ko" && <span className="text-label font-medium text-gray">· {st.orig}</span>}
