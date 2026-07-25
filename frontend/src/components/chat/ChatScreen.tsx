@@ -120,6 +120,7 @@ export default function ChatScreen() {
     return {
       id: lk.id,
       station: tr(st.name),
+      line: st.line,
       stationOrig: lang === "ko" ? "" : `· ${st.orig}`,
       xlLabel: `${T.xl} ${lk.xl_count}${T.slots}`,
       held: T.held,
@@ -153,10 +154,11 @@ export default function ChatScreen() {
     return {
       id: locker.id,
       station: {
-        ko: `${locker.name}역 · ${locker.line}호선`,
-        ja: `${locker.name}駅 · ${locker.line}号線`,
-        en: `${locker.name} · Line ${locker.line}`,
+        ko: `${locker.name}역`,
+        ja: `${locker.name}駅`,
+        en: locker.name,
       }[lang],
+      line: locker.line,
       stationOrig: "",
       xlLabel: `${T.xl} ${locker.xl}${T.slots}`,
       held: T.held,
@@ -682,6 +684,15 @@ export default function ChatScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 언어 전환 시 대화 초기화 후 새 언어로 재시작 — 이전 언어 스트림 잔존 방지
+  const langRef = useRef(lang);
+  useEffect(() => {
+    if (langRef.current === lang) return;
+    langRef.current = lang;
+    reset();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
   useEffect(() => {
     const el = scrollRef.current;
     if (el) requestAnimationFrame(() => (el.scrollTop = el.scrollHeight));
@@ -757,7 +768,7 @@ export default function ChatScreen() {
 
             {m.kind === "locker" && (
               /* 아바타 정렬 인덴트는 360px+에서만 — 320px대에선 카드 폭 확보 우선 */
-              <div className="flex flex-col gap-[11px] min-[360px]:ml-[38px]">
+              <div className="flex max-w-[82%] flex-col gap-[11px] min-[360px]:ml-[38px]">
                 {m.pickup && (
                   <>
                     <PickupCard p={m.pickup} />

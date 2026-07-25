@@ -13,6 +13,8 @@
 | BottomSheet | common/BottomSheet.tsx | 스크림+하단 시트 셸 | 모든 시트의 컨테이너. 88% 높이 캡 + 내부 스크롤 내장 |
 | UiProvider / useUi | common/UiProvider.tsx | 오버레이 전역 상태 (지도·시트·토스트) | 시트 열기: `openLockerSheet(id)` 등 |
 | Icons | common/Icons.tsx | 공용 SVG 아이콘 (프로토타입 지오메트리) | 새 아이콘도 여기에 추가 |
+| LineBadge | common/LineBadge.tsx | 부산 도시철도 호선 색상 뱃지 (노선색 단일 출처) | LockerCard·LockerSheet·LockersPage 역명 옆 |
+| SizeInfoPopover | common/SizeInfoPopover.tsx | 사이즈 안내 팝오버 (위드락커 규격) | LockersPage 필터행·LockerSheet 보유 개수 행 |
 
 ## 카드 (components/cards) — 채팅 인라인 5종+상태
 

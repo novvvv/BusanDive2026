@@ -2,18 +2,11 @@
 
 import { useState } from "react";
 import AppHeader from "@/components/common/AppHeader";
-import { InfoIcon, PinIcon, SearchIcon } from "@/components/common/Icons";
+import { PinIcon, SearchIcon } from "@/components/common/Icons";
+import LineBadge from "@/components/common/LineBadge";
+import SizeInfoPopover from "@/components/common/SizeInfoPopover";
 import { useLang } from "@/lib/i18n";
 import { SUBWAY_LOCKER_LOCATIONS } from "@/lib/subwayLockers";
-
-/** 부산 도시철도 호선 노선색 — 1 주황 / 2 초록 / 3 황토 / 4 파랑 / 5 부산-김해 경전철 보라 */
-const LINE_COLORS: Record<number, string> = {
-  1: "#F06A00",
-  2: "#81BF48",
-  3: "#BB8C00",
-  4: "#217DCB",
-  5: "#8652A1",
-};
 
 /** 보관소 현황 (§FE설계 1 — 하단 탭) — 부산 지하철 위드락커, 표시는 보유 칸수 */
 export default function LockersPage() {
@@ -25,18 +18,8 @@ export default function LockersPage() {
     searchPh: { ko: "역명 검색 (남포·부산·자갈치…)", ja: "駅名で検索", en: "Search station" }[lang],
     feeUnit: { ko: "요금은 3시간 기준", ja: "料金は3時間ごと", en: "Prices per 3 hrs" }[lang],
     sizeLabel: { ko: "크기별 보유 개수·요금", ja: "サイズ別 保有数·料金", en: "Slots & price by size" }[lang],
-    sizeInfo: { ko: "사이즈 안내", ja: "サイズ案内", en: "Sizes" }[lang],
-    sizeUnit: { ko: "가로 × 세로 × 깊이 (cm)", ja: "幅 × 高さ × 奥行 (cm)", en: "W × H × D (cm)" }[lang],
-    line: (n: number) => ({ ko: `${n}호선`, ja: `${n}号線`, en: `Line ${n}` })[lang],
     stationSuffix: { ko: "역", ja: "駅", en: "" }[lang],
   };
-
-  const sizeRows = [
-    { k: T.small, dim: "37 × 27 × 55" },
-    { k: T.medium, dim: "37 × 37 × 55" },
-    { k: T.large, dim: "37 × 57 × 55" },
-    { k: T.xl, dim: "37 × 87 × 55" },
-  ];
 
   const q = query.trim();
   const list = q
@@ -64,22 +47,7 @@ export default function LockersPage() {
       <div className="hd-scroll flex flex-1 flex-col gap-[11px] overflow-y-auto p-3.5 pt-2">
         {/* summary가 터치 타깃 44px을 유지해 세로가 부풀어 — 네거티브 마진으로 시각 간격만 회수 */}
         <div className="-mb-3 -mt-2.5 flex flex-wrap items-center gap-2 px-0.5">
-          {/* 사이즈 안내 팝오버 */}
-          <details className="group relative">
-            <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-[10.5px] font-semibold text-primary-dark [&::-webkit-details-marker]:hidden">
-              <InfoIcon size={13} />
-              {L.sizeInfo}
-            </summary>
-            <div className="absolute left-0 top-full z-overlay w-[158px] cursor-default rounded-xs border border-line bg-card px-[13px] py-[11px] shadow-raised">
-              <div className="mb-[7px] text-[10px] text-gray">{L.sizeUnit}</div>
-              {sizeRows.map((r) => (
-                <div key={r.k} className="flex items-center justify-between gap-2.5 py-[3px] text-[11.5px]">
-                  <span className="text-sub">{r.k}</span>
-                  <span className="font-bold tabular-nums text-ink">{r.dim}</span>
-                </div>
-              ))}
-            </div>
-          </details>
+          <SizeInfoPopover />
         </div>
 
         {list.length === 0 && (
@@ -93,13 +61,7 @@ export default function LockersPage() {
           >
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-[7px]">
-                {/* 노선색은 데이터 값 — 동적 클래스 금지라 inline style (CDOT 패턴) */}
-                <span
-                  style={{ background: LINE_COLORS[lk.line] }}
-                  className="flex-none rounded-md px-[7px] py-px text-caption font-bold text-white"
-                >
-                  {L.line(lk.line)}
-                </span>
+                <LineBadge line={lk.line} />
                 <span className="text-body font-bold text-ink">
                   {lk.name}
                   {L.stationSuffix}
@@ -118,27 +80,21 @@ export default function LockersPage() {
             </div>
             <div className="flex gap-1.5">
               {[
-                { k: T.small, v: lk.s, p: "2,000원", hi: false },
-                { k: T.medium, v: lk.m, p: "3,000원", hi: false },
-                { k: T.large, v: lk.l, p: "4,000원", hi: false },
-                { k: T.xl, v: lk.xl, p: "6,000원", hi: true }, // 특대 강조 — 캐리어 기준 (§4.4)
+                { k: T.small, v: lk.s, p: "2,000원" },
+                { k: T.medium, v: lk.m, p: "3,000원" },
+                { k: T.large, v: lk.l, p: "4,000원" },
+                { k: T.xl, v: lk.xl, p: "6,000원" },
               ].map((c) => (
                 <div
                   key={c.k}
-                  className={`flex-1 rounded-[9px] border px-0.5 py-1.5 text-center ${
-                    c.hi ? "border-primary-line bg-primary-bg" : "border-line bg-canvas"
-                  }`}
+                  className="flex-1 rounded-[9px] border border-line bg-canvas px-0.5 py-1.5 text-center"
                 >
-                  <div className={`text-[10px] font-semibold ${c.hi ? "text-primary-dark" : "text-gray"}`}>
-                    {c.k}
-                  </div>
-                  <div className={`mt-px text-label font-extrabold ${c.hi ? "text-primary-dark" : "text-ink"}`}>
+                  <div className="text-[10px] font-semibold text-gray">{c.k}</div>
+                  <div className="mt-px text-label font-extrabold text-ink">
                     {c.v}
                     {T.slots}
                   </div>
-                  <div className={`mt-0.5 text-[9px] font-semibold ${c.hi ? "text-primary-dark" : "text-gray"}`}>
-                    {c.p}
-                  </div>
+                  <div className="mt-0.5 text-[9px] font-semibold text-gray">{c.p}</div>
                 </div>
               ))}
             </div>

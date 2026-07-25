@@ -193,9 +193,9 @@ def build() -> list[dict[str, Any]]:
             "grade": grade(peak_value, peak_thresholds),
             "peak": localized_peak(day_type, peak_hour),
             "sample": {
-                "ko": f"{AS_OF} 시간대별 승하차 기반 · 역간 상대 등급",
-                "ja": f"{AS_OF} 時間帯別乗降データ · 駅間相対等級",
-                "en": f"{AS_OF} hourly entries/exits · relative station grade",
+                "ko": "2025 승하차 데이터 기반",
+                "ja": "2025 乗降データ基準",
+                "en": "Based on 2025 ridership data",
             },
             "grid": grid,
             "hours": GRID_HOURS,

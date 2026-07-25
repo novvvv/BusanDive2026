@@ -1,6 +1,7 @@
 "use client";
 
-import { ChevronRightIcon, InfoIcon } from "@/components/common/Icons";
+import { ChevronRightIcon } from "@/components/common/Icons";
+import LineBadge from "@/components/common/LineBadge";
 import { useLang } from "@/lib/i18n";
 import type { LockerVM } from "@/lib/types";
 
@@ -21,20 +22,22 @@ export default function LockerCard({ lk }: { lk: LockerVM }) {
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex flex-col gap-px">
-          <div className="text-[14.5px] font-bold text-ink">
-            {lk.station}{" "}
-            {lk.stationOrig && (
-              <span className="text-caption font-medium text-gray">{lk.stationOrig}</span>
-            )}
+          <div className="flex items-center gap-[7px]">
+            {lk.line !== undefined && <LineBadge line={lk.line} />}
+            <div className="text-[14.5px] font-bold text-ink">
+              {lk.station}{" "}
+              {lk.stationOrig && (
+                <span className="text-caption font-medium text-gray">{lk.stationOrig}</span>
+              )}
+            </div>
           </div>
           <div className="text-[11.5px] text-sub">{lk.dist}</div>
         </div>
+        <span className="flex flex-none items-center gap-[3px] text-[12px] font-semibold text-primary-dark">
+          {T.detail}
+          <ChevronRightIcon />
+        </span>
       </div>
-
-      <span className="inline-flex items-center gap-1 self-start rounded-[7px] bg-canvas px-2 py-[3px] text-[10.5px] text-gray">
-        <InfoIcon />
-        {lk.held}
-      </span>
 
       <div className="flex gap-4">
         <div className="flex flex-col gap-px">
@@ -65,10 +68,6 @@ export default function LockerCard({ lk }: { lk: LockerVM }) {
         </div>
       )}
 
-      <span className="flex items-center justify-end gap-[3px] text-[12px] font-semibold text-primary-dark">
-        {T.detail}
-        <ChevronRightIcon />
-      </span>
     </button>
   );
 }

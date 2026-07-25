@@ -135,10 +135,10 @@ export const UI: L10n<UiStrings> = {
 // ── 역 (부록 B) ──────────────────────────────
 export type StationId = "nampo" | "busan" | "jagalchi";
 
-export const STATIONS: Record<StationId, { name: L10n; orig: string; xl: number }> = {
-  nampo: { name: { ko: "남포역", ja: "南浦駅", en: "Nampo Stn." }, orig: "남포역", xl: 56 },
-  busan: { name: { ko: "부산역", ja: "釜山駅", en: "Busan Stn." }, orig: "부산역", xl: 78 },
-  jagalchi: { name: { ko: "자갈치역", ja: "チャガルチ駅", en: "Jagalchi Stn." }, orig: "자갈치역", xl: 45 },
+export const STATIONS: Record<StationId, { name: L10n; orig: string; xl: number; line: number }> = {
+  nampo: { name: { ko: "남포역", ja: "南浦駅", en: "Nampo Stn." }, orig: "남포역", xl: 56, line: 1 },
+  busan: { name: { ko: "부산역", ja: "釜山駅", en: "Busan Stn." }, orig: "부산역", xl: 78, line: 1 },
+  jagalchi: { name: { ko: "자갈치역", ja: "チャガルチ駅", en: "Jagalchi Stn." }, orig: "자갈치역", xl: 45, line: 1 },
 };
 
 export const FEE_XL = { amount: "6,000원", per: { ko: "3시간", ja: "3時間", en: "3 hrs" } as L10n };
