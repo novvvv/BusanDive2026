@@ -858,13 +858,9 @@ export default function ChatScreen() {
             </div>
           </div>
         )}
-        <div className="h-0.5 flex-none" />
-      </div>
-
-      {/* 추천 질문 칩 — 빈 입력창만 있는 챗 UI 금지 (§4.2) */}
-      <div className="flex-none bg-canvas">
+        {/* 추천 질문 칩 — 스트림 말미에 흘러가는 요소 (하단 고정 아님, 위로 스크롤 시 함께 사라짐) */}
         {chips.length > 0 && !typing && (
-          <div className="hd-scroll flex gap-2 overflow-x-auto px-4 pb-2.5 pt-2">
+          <div className="hd-scroll -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-0.5">
             {chips.map((c) => (
               <button
                 key={c.label}
@@ -881,6 +877,10 @@ export default function ChatScreen() {
             ))}
           </div>
         )}
+        <div className="h-0.5 flex-none" />
+      </div>
+
+      <div className="flex-none bg-canvas">
         {/* 입력바 — 하단 고정, safe-area 대응 (§4.2) */}
         {/* 입력+전송 일체형 캡슐 — 전송 버튼이 캡슐 내부 우측 */}
         <div className="px-3.5 pb-3 pt-1.5">
