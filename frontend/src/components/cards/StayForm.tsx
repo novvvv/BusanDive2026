@@ -38,8 +38,9 @@ export default function StayForm({
     spotDone: { ko: "여행지", ja: "旅先", en: "Destination" }[lang],
   };
 
+  // 16px 미만이면 iOS가 포커스 시 강제 줌
   const inputCls =
-    "min-h-[44px] w-full rounded-xs border border-line bg-canvas px-[13px] text-[14px] text-ink outline-none focus:border-primary focus:bg-card";
+    "min-h-[44px] w-full rounded-xs border border-line bg-canvas px-[13px] text-[16px] text-ink outline-none focus:border-primary focus:bg-card";
 
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-3 rounded-md rounded-tl-[5px] border border-line bg-card px-[15px] py-3.5 shadow-card">

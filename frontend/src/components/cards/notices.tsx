@@ -19,7 +19,7 @@ import LockerCard from "./LockerCard";
 /** 픽업 불가 (UNREGISTERED / DEADLINE_PASSED) — 실패 톤이 아니라 "대신 이 방법" 톤 */
 export function PickFailCard({ title, body }: { title: string; body: string }) {
   return (
-    <div className="ml-[38px] flex items-start gap-2.5 rounded-md border border-l-[3px] border-line border-l-heritage bg-card px-[15px] py-[13px] shadow-card">
+    <div className="min-[360px]:ml-[38px] flex items-start gap-2.5 rounded-md border border-l-[3px] border-line border-l-heritage bg-card px-[15px] py-[13px] shadow-card">
       <div className="mt-px flex h-6 w-6 flex-none items-center justify-center rounded-lg bg-heritage-bg text-[#B07A12]">
         <WarnIcon />
       </div>
@@ -34,7 +34,7 @@ export function PickFailCard({ title, body }: { title: string; body: string }) {
 /** 한 정거장 거리 대안 역 재제안 (인근 특대 없음) */
 export function AltCard({ altTitle, locker }: { altTitle: string; locker: LockerVM }) {
   return (
-    <div className="ml-[38px] flex flex-col gap-2">
+    <div className="min-[360px]:ml-[38px] flex flex-col gap-2">
       <span className="inline-flex items-center gap-[5px] self-start rounded-lg bg-primary-bg px-2.5 py-[5px] text-caption font-bold text-primary-dark">
         <ArrowRightIcon />
         {altTitle}
@@ -47,7 +47,7 @@ export function AltCard({ altTitle, locker }: { altTitle: string; locker: Locker
 /** 경계 응답 — 에러가 아니다. 정직함의 디자인 순간 (§5.5). 경고색 남용 금지 */
 export function BoundaryCard({ body, channels }: { body: string; channels: ChipVM[] }) {
   return (
-    <div className="ml-[38px] flex flex-col gap-3 rounded-md border border-dashed border-line-strong bg-card p-[15px]">
+    <div className="min-[360px]:ml-[38px] flex flex-col gap-3 rounded-md border border-dashed border-line-strong bg-card p-[15px]">
       <div className="flex items-start gap-2">
         <div className="mt-px flex h-6 w-6 flex-none items-center justify-center rounded-lg bg-canvas text-sub">
           <QuestionIcon />
@@ -73,7 +73,7 @@ export function BoundaryCard({ body, channels }: { body: string; channels: ChipV
 /** 결과 0건 — 다른 지역 제안 칩 동반 */
 export function ZeroCard({ body, chips }: { body: string; chips: ChipVM[] }) {
   return (
-    <div className="ml-[38px] flex flex-col gap-2.5">
+    <div className="min-[360px]:ml-[38px] flex flex-col gap-2.5">
       <div className="rounded-md rounded-tl-md border border-line bg-card px-3.5 py-3 text-[14px] leading-normal text-ink shadow-card">
         {body}
       </div>
@@ -82,7 +82,7 @@ export function ZeroCard({ body, chips }: { body: string; chips: ChipVM[] }) {
           <button
             key={c.label}
             onClick={c.onClick}
-            className="min-h-10 rounded-full border border-primary-line bg-card px-[15px] text-[13.5px] font-semibold text-primary-dark active:scale-[0.96] active:bg-primary-bg"
+            className="min-h-11 rounded-full border border-primary-line bg-card px-[15px] text-[13.5px] font-semibold text-primary-dark active:scale-[0.96] active:bg-primary-bg"
           >
             {c.label}
           </button>
@@ -96,11 +96,11 @@ export function ZeroCard({ body, chips }: { body: string; chips: ChipVM[] }) {
 export function NetErrCard({ body, onRetry }: { body: string; onRetry: () => void }) {
   const { T } = useLang();
   return (
-    <div className="ml-[38px] flex items-center gap-[11px] rounded-md border border-[#F0D2CE] bg-card px-[15px] py-[13px]">
+    <div className="min-[360px]:ml-[38px] flex items-center gap-[11px] rounded-md border border-[#F0D2CE] bg-card px-[15px] py-[13px]">
       <div className="flex-1 text-label leading-normal text-sub">{body}</div>
       <button
         onClick={onRetry}
-        className="flex min-h-10 flex-none items-center gap-[5px] rounded-xs border border-primary-line bg-primary-bg px-[15px] text-label font-bold text-primary-dark active:scale-[0.97]"
+        className="flex min-h-11 flex-none items-center gap-[5px] rounded-xs border border-primary-line bg-primary-bg px-[15px] text-label font-bold text-primary-dark active:scale-[0.97]"
       >
         <RetryIcon />
         {T.retry}

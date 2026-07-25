@@ -536,7 +536,7 @@ export default function ChatScreen() {
           <button
             onClick={() => setEdgeOpen(true)}
             aria-label="엣지 케이스 데모"
-            className="flex h-10 w-10 items-center justify-center rounded-xs text-gray active:scale-[0.94]"
+            className="flex h-11 w-11 items-center justify-center rounded-xs text-gray active:scale-[0.94]"
           >
             <FlaskIcon />
           </button>
@@ -589,7 +589,8 @@ export default function ChatScreen() {
             {m.kind === "poi" && <PoiCarousel pois={m.pois} />}
 
             {m.kind === "locker" && (
-              <div className="ml-[38px] flex flex-col gap-[11px]">
+              /* 아바타 정렬 인덴트는 360px+에서만 — 320px대에선 카드 폭 확보 우선 */
+              <div className="flex flex-col gap-[11px] min-[360px]:ml-[38px]">
                 {m.pickup && (
                   <>
                     <PickupCard p={m.pickup} />
@@ -617,7 +618,7 @@ export default function ChatScreen() {
                       <button
                         key={c.label}
                         onClick={c.onClick}
-                        className="min-h-[42px] rounded-sm border border-primary-line bg-primary-bg px-4 text-[13.5px] font-bold text-primary-dark active:scale-[0.97]"
+                        className="min-h-11 rounded-sm border border-primary-line bg-primary-bg px-4 text-[13.5px] font-bold text-primary-dark active:scale-[0.97]"
                       >
                         {c.label}
                       </button>
@@ -673,7 +674,7 @@ export default function ChatScreen() {
               <button
                 key={c.label}
                 onClick={c.onClick}
-                className={`flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-[15px] text-[13.5px] font-semibold active:scale-[0.96] ${
+                className={`flex min-h-11 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-[15px] text-[13.5px] font-semibold active:scale-[0.96] ${
                   c.variant === "reset"
                     ? "border-line-strong bg-transparent text-gray"
                     : "border-primary-line bg-card text-primary-dark"
@@ -697,7 +698,8 @@ export default function ChatScreen() {
                 }
               }}
               placeholder={T.inputPlaceholder}
-              className="min-h-[44px] flex-1 bg-transparent text-[14.5px] text-ink outline-none"
+              /* 16px 미만이면 iOS가 포커스 시 강제 줌 — 입력만 16px 고정 */
+              className="min-h-[44px] w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
             />
           </div>
           <button

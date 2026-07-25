@@ -72,7 +72,7 @@ export default function PickupPage() {
             <button
               key={sg.key}
               onClick={() => setView(sg.key)}
-              className={`flex min-h-[34px] flex-none items-center whitespace-nowrap rounded-full border px-3.5 text-[12.5px] font-semibold active:scale-[0.96] ${
+              className={`flex min-h-10 flex-none items-center whitespace-nowrap rounded-full border px-3.5 text-[12.5px] font-semibold active:scale-[0.96] ${
                 active ? "border-primary bg-primary text-white" : "border-primary-line bg-white text-primary-dark"
               }`}
             >
@@ -123,13 +123,14 @@ export default function PickupPage() {
               <span className="text-label font-bold text-ink">{L.hotelLabel}</span>
               <span className="text-[11.5px] text-gray">{L.hotelCount}</span>
             </div>
-            <div className="flex h-[42px] items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
+            <div className="flex h-11 items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
               <SearchIcon />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={L.searchPh}
-                className="flex-1 bg-transparent text-[14px] text-ink outline-none"
+                /* 16px 미만이면 iOS가 포커스 시 강제 줌 */
+                className="w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
               />
             </div>
             {hotels.length === 0 && (

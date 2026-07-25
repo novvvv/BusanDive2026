@@ -8,7 +8,7 @@ import type { PoiVM } from "@/lib/types";
 export default function PoiCarousel({ pois }: { pois: PoiVM[] }) {
   const { T } = useLang();
   return (
-    <div className="hd-scroll ml-[38px] flex gap-[11px] overflow-x-auto pb-1.5 pt-0.5">
+    <div className="hd-scroll flex gap-[11px] overflow-x-auto pb-1.5 pt-0.5 min-[360px]:ml-[38px]">
       {pois.map((p) => (
         <button
           key={p.id}

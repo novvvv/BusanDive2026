@@ -35,7 +35,7 @@ export default function MapOverlay({
         <button
           onClick={onClose}
           aria-label={T.back}
-          className="flex h-10 w-10 items-center justify-center rounded-xs text-ink active:scale-[0.92]"
+          className="flex h-11 w-11 items-center justify-center rounded-xs text-ink active:scale-[0.92]"
         >
           <BackIcon />
         </button>
@@ -51,7 +51,8 @@ export default function MapOverlay({
         }}
       >
         {/* 범례 */}
-        <div className="absolute left-3 top-3 flex gap-3 rounded-xxs border border-line bg-white/85 px-3 py-2 text-caption font-semibold text-sub">
+        {/* 320px대·긴 언어(ja)에서 한 줄 초과 시 줄바꿈 */}
+        <div className="absolute left-3 top-3 flex max-w-[calc(100%-24px)] flex-wrap gap-x-3 gap-y-1 rounded-xxs border border-line bg-white/85 px-3 py-2 text-caption font-semibold text-sub">
           <span className="flex items-center gap-1">
             <span className="h-3 w-3 rounded-full border-2 border-white bg-primary shadow-[0_0_0_1px_#D9502E]" />
             {legend.poi}
