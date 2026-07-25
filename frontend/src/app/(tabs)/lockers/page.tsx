@@ -3,8 +3,8 @@
 import { useState } from "react";
 import AppHeader from "@/components/common/AppHeader";
 import { InfoIcon, PinIcon, SearchIcon } from "@/components/common/Icons";
-import { SUBWAY_LOCKERS } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
+import { SUBWAY_LOCKER_LOCATIONS } from "@/lib/subwayLockers";
 
 /** 부산 도시철도 호선 노선색 — 1 주황 / 2 초록 / 3 황토 / 4 파랑 / 5 부산-김해 경전철 보라 */
 const LINE_COLORS: Record<number, string> = {
@@ -39,7 +39,9 @@ export default function LockersPage() {
   ];
 
   const q = query.trim();
-  const list = q ? SUBWAY_LOCKERS.filter((x) => x.name.includes(q)) : SUBWAY_LOCKERS;
+  const list = q
+    ? SUBWAY_LOCKER_LOCATIONS.filter((locker) => locker.name.includes(q))
+    : SUBWAY_LOCKER_LOCATIONS;
 
   return (
     <div className="flex min-h-0 flex-1 animate-fade-up flex-col">

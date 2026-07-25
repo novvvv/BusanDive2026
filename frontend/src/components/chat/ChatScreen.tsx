@@ -13,6 +13,7 @@ import { AltCard, BoundaryCard, NetErrCard, PickFailCard, ZeroCard } from "@/com
 import {
   ALT_LOCKER,
   BOUNDARY_CHANNELS,
+  FEE_XL,
   HOTEL,
   LOCKERS,
   PICKUP_OK,
@@ -22,6 +23,11 @@ import {
   type Locker,
 } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
+import {
+  recommendSubwayLockers,
+  type RecommendedSubwayLocker,
+} from "@/lib/subwayLockers";
+import { findSubwayCongestion } from "@/lib/subwayCongestion";
 import type { ChipVM, LockerVM, Msg, PickupVM } from "@/lib/types";
 
 // 혼잡 4등급 색 (congestion 토큰) — 항상 텍스트 라벨과 병행 (§7)
@@ -55,6 +61,7 @@ export default function ChatScreen() {
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const bootedRef = useRef(false);
+  const lastRecommendedLockerRef = useRef<RecommendedSubwayLocker | null>(null);
 
   // 스트림에 저장된 칩/카드 콜백이 언어 전환 후에도 최신 구현을 보게 하는 디스패처
   const api = useRef<{
@@ -103,7 +110,7 @@ export default function ChatScreen() {
           bg: CBG[lk.congestion.grade - 1],
           // §7-② 혼잡은 항상 과거형
           text: {
-            ko: `${tr(st.name)}은 ${tr(lk.congestion.peak)}가 혼잡했어요. ${T.congAdvice}`,
+            ko: `${tr(st.name)}은 ${tr(lk.congestion.peak)}에 혼잡했어요. ${T.congAdvice}`,
             ja: `${tr(st.name)}は${tr(lk.congestion.peak)}が混雑していました。${T.congAdvice}`,
             en: `${tr(st.name)} was busy on ${tr(lk.congestion.peak)}. ${T.congAdvice}`,
           }[lang],
@@ -124,8 +131,52 @@ export default function ChatScreen() {
     };
   };
 
-  const pickupView = (): PickupVM => ({
-    hotel: tr(HOTEL),
+  const subwayLockerView = (
+    locker: RecommendedSubwayLocker,
+    basisStation: string | null,
+  ): LockerVM => {
+    const congestionSource = findSubwayCongestion(locker.id);
+    const cong = congestionSource
+      ? {
+          grade: congestionSource.grade,
+          label: T.cong[congestionSource.grade - 1],
+          color: CDOT[congestionSource.grade - 1],
+          bg: CBG[congestionSource.grade - 1],
+          text: {
+            ko: `${locker.name}역은 ${tr(congestionSource.peak)}에 승하차가 가장 많았어요. 이 시간대를 피하면 더 여유로웠어요.`,
+            ja: `${locker.name}駅は${tr(congestionSource.peak)}の乗降が最も多くなりました。この時間帯を避けると比較的空いていました。`,
+            en: `${locker.name} Station had the most entries and exits on ${tr(congestionSource.peak)}. Other times were relatively quieter.`,
+          }[lang],
+          sample: tr(congestionSource.sample),
+        }
+      : null;
+    return {
+      id: locker.id,
+      station: {
+        ko: `${locker.name}역 · ${locker.line}호선`,
+        ja: `${locker.name}駅 · ${locker.line}号線`,
+        en: `${locker.name} · Line ${locker.line}`,
+      }[lang],
+      stationOrig: "",
+      xlLabel: `${T.xl} ${locker.xl}${T.slots}`,
+      held: T.held,
+      fee: `${FEE_XL.amount} / ${tr(FEE_XL.per)}`,
+      loc: locker.loc,
+      dist:
+        locker.distanceM === null
+          ? { ko: "거리 확인 필요", ja: "距離確認が必要", en: "Distance unavailable" }[lang]
+          : {
+              ko: `${basisStation}역 기준 ${locker.distanceM}m`,
+              ja: `${basisStation}駅から ${locker.distanceM}m`,
+              en: `${locker.distanceM}m from ${basisStation} Station`,
+            }[lang],
+      cong,
+      onDetail: () => openLockerSheet(locker.id),
+    };
+  };
+
+  const pickupView = (hotel?: string): PickupVM => ({
+    hotel: hotel || tr(HOTEL),
     slot: PICKUP_OK.slot_time,
     deadline: PICKUP_OK.deadline,
     onReserve: () => api.current.toast(),
@@ -170,6 +221,12 @@ export default function ChatScreen() {
 
   const respondLocker = (opts?: { mode?: string; stay?: string; spot?: string }) => {
     const spotOnly = opts?.mode === "spot";
+    const spot = opts?.spot || POIS[0].orig;
+    const recommendation = recommendSubwayLockers(spot);
+    lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
+    const recommendedLockers = recommendation.lockers.map((locker) =>
+      subwayLockerView(locker, recommendation.basisStation),
+    );
     const afterChips = [
       {
         label: { ko: "혼잡 자세히", ja: "混雑を詳しく", en: "Crowd details" }[lang],
@@ -179,33 +236,73 @@ export default function ChatScreen() {
       { label: T.mapTitle, onClick: () => api.current.openMap() },
     ];
     if (spotOnly) {
-      const spot = opts?.spot || tr(POIS[0].name);
-      const intro = {
-        ko: `${spot} 근처 지하철 물품 보관소를 추천해드릴게요.`,
-        ja: `${spot} 近くの地下鉄ロッカーをおすすめします。`,
-        en: `Here are metro lockers near ${spot}.`,
-      };
+      const intro = recommendation.isResolved
+        ? {
+            ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준 가까운 물품 보관소예요.`,
+            ja: `${spot}に対応する${recommendation.basisStation}駅を基準に近いロッカーです。`,
+            en: `These lockers are nearest to ${recommendation.basisStation} Station, mapped from ${spot}.`,
+          }
+        : {
+            ko: `${spot} 위치를 정확히 찾지 못해 특대형 보유 칸수가 많은 순으로 보여드려요.`,
+            ja: `${spot}の位置を特定できなかったため、特大ロッカーの保有数順に表示します。`,
+            en: `I couldn't resolve ${spot}, so these are sorted by XL locker capacity.`,
+          };
       push({ kind: "text", text: tr(intro) } as Msg);
-      push({ kind: "locker", pickup: null, lockers: LOCKERS.map(lockerView) } as Msg);
+      push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
       setChips(afterChips);
       return;
     }
-    const intro = {
-      ko: "짐은 두 가지 방법이 있어요. 픽업과 보관함, 원하는 쪽으로요.",
-      ja: "荷物は2つの方法があります。集荷とロッカー、お好きな方で。",
-      en: "You have two options for your bags — pickup or lockers. Whichever suits you.",
-    };
+    const intro = recommendation.isResolved
+      ? {
+          ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준으로 픽업과 가까운 보관함을 함께 찾았어요.`,
+          ja: `${spot}に対応する${recommendation.basisStation}駅を基準に、集荷と近いロッカーを探しました。`,
+          en: `I found pickup and lockers near ${recommendation.basisStation} Station, mapped from ${spot}.`,
+        }
+      : {
+          ko: `${spot} 위치를 정확히 찾지 못해 픽업과 특대형 보유 칸수가 많은 보관함을 함께 보여드려요.`,
+          ja: `${spot}の位置を特定できなかったため、集荷と特大ロッカーの多い場所を表示します。`,
+          en: `I couldn't resolve ${spot}, so I'm showing pickup and stations with the most XL lockers.`,
+        };
     push({ kind: "text", text: tr(intro) } as Msg);
     // 픽업·보관함은 나란히 동급 — 위계 없음 (§5.2)
-    push({ kind: "locker", pickup: pickupView(), lockers: LOCKERS.map(lockerView) } as Msg);
+    push({
+      kind: "locker",
+      pickup: pickupView(opts?.stay),
+      lockers: recommendedLockers,
+    } as Msg);
     setChips(afterChips);
   };
 
   const respondCong = () => {
+    const recommended = lastRecommendedLockerRef.current;
+    const historical = recommended
+      ? findSubwayCongestion(recommended.id)
+      : null;
+    if (recommended && historical) {
+      const text = {
+        ko: `${recommended.name}역은 ${tr(historical.peak)}에 승하차가 가장 많았어요. ${T.congAdvice}`,
+        ja: `${recommended.name}駅は${tr(historical.peak)}の乗降が最も多くなりました。${T.congAdvice}`,
+        en: `${recommended.name} Station had the most entries and exits on ${tr(historical.peak)}. ${T.congAdvice}`,
+      };
+      push({
+        kind: "text",
+        text: tr(text),
+        attach: {
+          type: "congOpen",
+          label: T.detail,
+          onClick: () => openLockerSheet(recommended.id),
+        },
+      } as Msg);
+      setChips([
+        { label: T.choices[1], onClick: () => api.current.act("locker") },
+        { label: T.choices[2], onClick: () => api.current.act("rag") },
+      ]);
+      return;
+    }
     const lk = LOCKERS[0];
     const st = STATIONS[lk.station];
     const text = {
-      ko: `${tr(st.name)}은 ${tr(lk.congestion!.peak)}가 혼잡했어요. ${T.congAdvice}`,
+      ko: `${tr(st.name)}은 ${tr(lk.congestion!.peak)}에 혼잡했어요. ${T.congAdvice}`,
       ja: `${tr(st.name)}は${tr(lk.congestion!.peak)}が混雑していました。${T.congAdvice}`,
       en: `${tr(st.name)} was busy on ${tr(lk.congestion!.peak)}. ${T.congAdvice}`,
     };
