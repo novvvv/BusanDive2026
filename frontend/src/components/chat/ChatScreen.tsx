@@ -243,7 +243,6 @@ export default function ChatScreen() {
         onClick: () => api.current.act("cong"),
       },
       { label: T.choices[2], onClick: () => api.current.act("rag") },
-      { label: T.mapTitle, onClick: () => api.current.openMap() },
     ];
     if (spotOnly) {
       const recommendation = recommendSubwayLockers(spot);
