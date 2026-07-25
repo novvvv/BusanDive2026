@@ -860,7 +860,7 @@ export default function ChatScreen() {
         )}
         {/* 추천 질문 칩 — 스트림 말미에 흘러가는 요소 (하단 고정 아님, 위로 스크롤 시 함께 사라짐) */}
         {chips.length > 0 && !typing && (
-          <div className="hd-scroll -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 pt-0.5">
+          <div className="hd-scroll -mx-4 flex flex-none gap-2 overflow-x-auto px-4 pb-1 pt-0.5">
             {chips.map((c) => (
               <button
                 key={c.label}
