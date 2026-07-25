@@ -16,7 +16,7 @@ export default function PickupCard({ p }: { p: PickupVM }) {
   return (
     <div className="flex flex-col gap-[11px] rounded-lg border border-line bg-card px-[15px] py-3.5 shadow-card">
       <div className="flex items-center gap-[7px]">
-        <div className="flex h-[26px] w-[26px] items-center justify-center rounded-lg bg-primary-bg text-primary">
+        <div className="flex h-[26px] w-[26px] items-center justify-center rounded-lg bg-heritage-bg text-heritage">
           <BoxIcon />
         </div>
         <span className="text-[14px] font-bold text-ink">{T.pickupTitle}</span>
