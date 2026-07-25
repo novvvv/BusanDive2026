@@ -27,6 +27,7 @@ import {
   type RecommendedSubwayLocker,
 } from "@/lib/subwayLockers";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
+import { localizeSubwayLockerLoc } from "@/lib/subwayLockerLoc";
 import { localizeSubwayStationName } from "@/lib/subwayNames";
 import type { ChipVM, LockerVM, Msg, PickupVM } from "@/lib/types";
 import { findZimcarryHotel } from "@/lib/zimcarryHotels";
@@ -58,10 +59,12 @@ export default function ChatScreen() {
   const [chips, setChipsState] = useState<ChipVM[]>([]);
   const [draft, setDraft] = useState("");
   const [edgeOpen, setEdgeOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   const uidRef = useRef(0);
   const timerRef = useRef<ReturnType<typeof setTimeout>>();
   const scrollRef = useRef<HTMLDivElement>(null);
+  const lastScrollTopRef = useRef(0);
   const bootedRef = useRef(false);
   const lastRecommendedLockerRef = useRef<RecommendedSubwayLocker | null>(null);
 
@@ -69,26 +72,15 @@ export default function ChatScreen() {
   const api = useRef<{
     act: (i: Intent, o?: { mode?: string; stay?: string; spot?: string }) => void;
     startStay: (m: "pickup" | "spot") => void;
-    reset: () => void;
     openMap: () => void;
     toast: () => void;
-  }>({ act: () => {}, startStay: () => {}, reset: () => {}, openMap: () => {}, toast: () => {} });
+  }>({ act: () => {}, startStay: () => {}, openMap: () => {}, toast: () => {} });
 
   const uid = (p: string) => `${p}_${++uidRef.current}`;
   const push = (item: Omit<Msg, "id"> & { kind: Msg["kind"] }) =>
     setStream((s) => [...s, { ...item, id: uid(item.kind) } as Msg]);
 
-  const setChips = (list: Omit<ChipVM, "variant">[], withReset = true) => {
-    const norm: ChipVM[] = list.map((c) => ({ ...c, variant: "default" }));
-    if (withReset) {
-      norm.push({
-        label: { ko: "↻ 다시 하기", ja: "↻ やり直す", en: "↻ Start over" }[lang],
-        variant: "reset",
-        onClick: () => api.current.reset(),
-      });
-    }
-    setChipsState(norm);
-  };
+  const setChips = (list: ChipVM[]) => setChipsState(list);
 
   const think = (msg: string, cb: () => void, ms = 900) => {
     setTyping(msg);
@@ -171,7 +163,7 @@ export default function ChatScreen() {
       xlLabel: `${T.xl} ${locker.xl}${T.slots}`,
       held: T.held,
       fee: `${FEE_XL.amount} / ${tr(FEE_XL.per)}`,
-      loc: locker.loc,
+      loc: localizeSubwayLockerLoc(locker.loc, lang),
       dist:
         locker.distanceM === null
           ? { ko: "거리 확인 필요", ja: "距離確認が必要", en: "Distance unavailable" }[lang]
@@ -452,9 +444,29 @@ export default function ChatScreen() {
   };
 
   // ── 진입 분기: 칩 → 숙소/여행지 폼 → 제출 시 응답 ──
+  // 진입 칩 2종 — 부팅 시 스트림 칩으로, 스크롤 후엔 입력바 위 퀵바로 노출
+  const entryChips: ChipVM[] = [
+    {
+      label: { ko: "숙소 픽업", ja: "宿で集荷", en: "Pickup at stay" }[lang],
+      onClick: () => api.current.startStay("pickup"),
+    },
+    {
+      label: { ko: "여행지 근처 보관함", ja: "旅先近くのロッカー", en: "Lockers near spot" }[lang],
+      onClick: () => api.current.startStay("spot"),
+    },
+  ];
+
   const startStay = (mode: "pickup" | "spot") => {
     push({ kind: "stayform", mode, done: false } as Msg);
     setChipsState([]);
+    // 퀵바에서 진입 시 폼이 화면 밖(아래)에 생길 수 있어 맨 아래로 스크롤
+    requestAnimationFrame(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      el.scrollTop = el.scrollHeight;
+      lastScrollTopRef.current = el.scrollTop; // 프로그래매틱 스크롤은 퀵바 트리거에서 제외
+      setScrolled(false);
+    });
   };
 
   const submitStay = (msgId: string, mode: "pickup" | "spot", stay: string, spot: string) => {
@@ -488,19 +500,7 @@ export default function ChatScreen() {
       en: "Hi! I'll help you enjoy your last half day without worrying about your bags. Please choose a question to get started.",
     };
     push({ kind: "text", text: tr(greet) } as Msg);
-    setChips(
-      [
-        {
-          label: { ko: "숙소 픽업", ja: "宿で集荷", en: "Pickup at stay" }[lang],
-          onClick: () => api.current.startStay("pickup"),
-        },
-        {
-          label: { ko: "여행지 근처 보관함", ja: "旅先近くのロッカー", en: "Lockers near spot" }[lang],
-          onClick: () => api.current.startStay("spot"),
-        },
-      ],
-      false
-    );
+    setChips(entryChips);
   };
 
   const reset = () => {
@@ -509,6 +509,8 @@ export default function ChatScreen() {
     setTyping("");
     setChipsState([]);
     setEdgeOpen(false);
+    setScrolled(false); // 스트림이 비면 스크롤 이벤트 없이 scrollTop=0이 되므로 직접 해제
+    lastScrollTopRef.current = 0;
     setTimeout(boot, 0);
   };
 
@@ -681,7 +683,6 @@ export default function ChatScreen() {
   // 콜백이 항상 최신 구현을 보도록 매 렌더 갱신
   api.current.act = act;
   api.current.startStay = startStay;
-  api.current.reset = reset;
   api.current.openMap = openMap;
   api.current.toast = toast;
 
@@ -711,6 +712,7 @@ export default function ChatScreen() {
       if (!target) return;
       el.scrollTop =
         target.getBoundingClientRect().top - el.getBoundingClientRect().top + el.scrollTop - 10;
+      lastScrollTopRef.current = el.scrollTop; // 프로그래매틱 스크롤은 퀵바 트리거에서 제외
     });
   }, [stream]);
 
@@ -741,6 +743,12 @@ export default function ChatScreen() {
       {/* 메시지 스트림 */}
       <div
         ref={scrollRef}
+        onScroll={(e) => {
+          // 아래로 스크롤하는 동안만 퀵바 노출, 위로 올리면 숨김
+          const top = e.currentTarget.scrollTop;
+          setScrolled(top > 60 && top > lastScrollTopRef.current);
+          lastScrollTopRef.current = top;
+        }}
         className="hd-scroll flex flex-1 flex-col gap-3.5 overflow-y-auto overflow-x-hidden px-4 pb-2 pt-[18px]"
       >
         {stream.map((m) => (
@@ -863,11 +871,7 @@ export default function ChatScreen() {
                 key={c.label}
                 onClick={c.onClick}
                 /* ponytail: 시각 크기 우선으로 40px — 44px 터치 타깃 규칙 예외, 문제 되면 min-h-11 복귀 */
-                className={`flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-3 text-[12.5px] font-semibold active:scale-[0.96] ${
-                  c.variant === "reset"
-                    ? "ml-auto border-line-strong bg-transparent text-gray"
-                    : "border-primary-line bg-card text-primary-dark"
-                }`}
+                className="flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border border-primary-line bg-card px-3 text-[12.5px] font-semibold text-primary-dark active:scale-[0.96]"
               >
                 {c.label}
               </button>
@@ -878,6 +882,20 @@ export default function ChatScreen() {
       </div>
 
       <div className="flex-none bg-canvas">
+        {/* 진입 퀵바 — 스트림이 스크롤되면 왼쪽에 진입 칩 2종 상시 노출 */}
+        {scrolled && (
+          <div className="hd-scroll flex animate-fade-up gap-2 overflow-x-auto px-3.5 pt-1.5">
+            {entryChips.map((c) => (
+              <button
+                key={c.label}
+                onClick={c.onClick}
+                className="flex min-h-10 flex-none items-center whitespace-nowrap rounded-full border border-primary-line bg-card px-3 text-[12.5px] font-semibold text-primary-dark active:scale-[0.96]"
+              >
+                {c.label}
+              </button>
+            ))}
+          </div>
+        )}
         {/* 입력바 — 하단 고정, safe-area 대응 (§4.2) */}
         {/* 입력+전송 일체형 캡슐 — 전송 버튼이 캡슐 내부 우측 */}
         <div className="px-3.5 pb-3 pt-1.5">

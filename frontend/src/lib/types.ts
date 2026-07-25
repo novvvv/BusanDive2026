@@ -6,8 +6,6 @@
 export interface ChipVM {
   label: string;
   onClick: () => void;
-  /** reset 칩(↻ 다시 하기)은 회색 보더로 구분 */
-  variant?: "default" | "reset";
 }
 
 export interface PoiVM {
