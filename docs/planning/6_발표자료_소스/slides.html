@@ -47,7 +47,16 @@
 <!-- 1. 표지 -->
 <section class="slide" style="padding-top:150px">
   <div class="eyebrow" style="font-size:19px">부산 DIVE 2026 · 부산교통공사 × 짐캐리</div>
-  <div style="font-size:110px;font-weight:800;letter-spacing:-0.04em;line-height:1.05">반나절</div>
+  <div style="display:flex;align-items:center;gap:28px">
+    <div style="font-size:110px;font-weight:800;letter-spacing:-0.04em;line-height:1.05">반나절</div>
+    <svg width="96" height="96" viewBox="0 0 100 100" fill="none" style="background:var(--accent);border-radius:24px">
+      <defs><clipPath id="sunclip"><rect x="18" y="20" width="64" height="34"/></clipPath></defs>
+      <circle cx="50" cy="54" r="21" fill="#fff" clip-path="url(#sunclip)"/>
+      <rect x="18" y="51.5" width="64" height="5" rx="2.5" fill="#fff"/>
+      <circle cx="37" cy="72" r="6" fill="#fff"/>
+      <circle cx="63" cy="72" r="6" fill="#fff"/>
+    </svg>
+  </div>
   <div style="font-size:34px;color:var(--gray);margin-top:14px;font-weight:500">はんにち · Half Day</div>
   <div style="font-size:26px;color:var(--sub);margin-top:48px">짐을 내려놓으면, 마지막 반나절이 여행이 됩니다</div>
   <div style="font-size:19px;font-weight:700;margin-top:64px">팀 BWave <span style="font-weight:500;color:var(--sub)">· 최도일 · 김현겸</span></div>
@@ -145,12 +154,6 @@
       <div class="src">출처: 짐캐리 짐배송 이동 흐름(2025)</div>
     </div>
     <div class="card">
-      <div class="stat">70<small>%</small></div>
-      <div class="t">서울 '또타캐배' 외국인 비중</div>
-      <div class="s">같은 짐 서비스인데<br>7배 넘는 격차가 납니다</div>
-      <div class="src">출처: 머니투데이(2024.7)</div>
-    </div>
-    <div class="card">
       <div class="stat">364<small>만</small></div>
       <div class="t">2025년 부산 방문 외국인</div>
       <div class="s">전년 대비 +24.4% 역대 최대,<br>소비 1조 530억 원</div>
@@ -197,7 +200,7 @@
     <div class="card tint">
       <span class="badge" style="background:rgba(255,255,255,.18);color:#fff">반나절의 역방향 필터</span>
       <p style="font-size:21px;color:#fff;font-weight:700;line-height:1.7">1. 보관함 보유 71개 역을 먼저 잡는다<br><span style="color:#F3B49C">↓</span><br>2. 그 인근만 관광지 후보로 삼는다</p>
-      <p style="margin-top:16px">추천이 곧 실행 가능한 계획이 됩니다</p>
+      <p style="margin-top:16px">추천받은 모든 곳이 짐 보관까지 가능합니다</p>
     </div>
   </div>
   <div class="bottomline" style="font-size:22px"><b>"가보니 짐 맡길 데가 없다"</b>는 상황이 처음부터 생기지 않습니다</div>
@@ -218,11 +221,6 @@
       <td style="padding:20px 8px;font-weight:800">사실 정보</td>
       <td style="padding:20px 8px;color:var(--gray)">모델이 생성해 칸수·요금을 지어낼 수 있음</td>
       <td style="padding:20px 8px;font-weight:600">모든 숫자는 데이터 조회 결과,<br>모든 안내는 공식 문서에서만 가져옵니다</td>
-    </tr>
-    <tr style="border-top:1px solid var(--line)">
-      <td style="padding:20px 8px;font-weight:800">재현성</td>
-      <td style="padding:20px 8px;color:var(--gray)">같은 질문에 다른 답</td>
-      <td style="padding:20px 8px;font-weight:600">규칙 기반 후보 선정</td>
     </tr>
     <tr style="border-top:1px solid var(--line)">
       <td style="padding:20px 8px;font-weight:800">모를 때</td>
@@ -340,56 +338,7 @@
   <div class="pageno">11</div>
 </section>
 
-<!-- 12. 3-b 차트: 요일·월 변동 -->
-<section class="slide">
-  <div class="eyebrow">3-b. 도출한 데이터 인사이트</div>
-  <h1 style="font-size:44px">금요일 <b style="color:var(--accent)">+28%</b>, 8월 <b style="color:var(--accent)">+21%</b>,<br>감으로 피할 수 없는 변동입니다</h1>
-  <div style="display:flex;gap:24px;margin-top:34px">
-    <div style="background:var(--card);border-radius:20px;padding:28px 30px 18px;flex:1">
-      <div style="font-size:15.5px;font-weight:700;margin-bottom:4px">요일별 일평균 승차 <span style="color:var(--gray);font-weight:500">· 부산역</span></div>
-      <svg viewBox="0 0 610 250" style="width:100%">
-        <line x1="50" y1="210" x2="570" y2="210" stroke="#EDE4DA"/>
-        <g>
-          <rect x="60" y="64" width="52" height="146" rx="4" fill="#E7DCCF"/>
-          <rect x="135" y="70" width="52" height="140" rx="4" fill="#E7DCCF"/>
-          <rect x="209" y="68" width="52" height="142" rx="4" fill="#E7DCCF"/>
-          <rect x="284" y="63" width="52" height="147" rx="4" fill="#E7DCCF"/>
-          <rect x="359" y="32" width="52" height="178" rx="4" fill="#D9502E"/>
-          <rect x="433" y="41" width="52" height="169" rx="4" fill="#E7DCCF"/>
-          <rect x="508" y="69" width="52" height="141" rx="4" fill="#E7DCCF"/>
-        </g>
-        <g font-size="12.5" fill="#6B5F58" text-anchor="middle">
-          <text x="86" y="56">23,064</text><text x="161" y="62">22,038</text><text x="235" y="60">22,375</text><text x="310" y="55">23,283</text>
-          <text x="385" y="24" font-weight="800" fill="#B23E20">28,178</text><text x="459" y="33">26,742</text><text x="534" y="61">22,339</text>
-        </g>
-        <g font-size="13.5" fill="#A79B90" text-anchor="middle">
-          <text x="86" y="232">월</text><text x="161" y="232">화</text><text x="235" y="232">수</text><text x="310" y="232">목</text>
-          <text x="385" y="232" font-weight="800" fill="#B23E20">금</text><text x="459" y="232">토</text><text x="534" y="232">일</text>
-        </g>
-      </svg>
-    </div>
-    <div style="background:var(--card);border-radius:20px;padding:28px 30px 18px;flex:1">
-      <div style="font-size:15.5px;font-weight:700;margin-bottom:4px">월별 일평균 승차 <span style="color:var(--gray);font-weight:500">· 부산역</span></div>
-      <svg viewBox="0 0 610 250" style="width:100%">
-        <g stroke="#EDE4DA" stroke-width="1"><line x1="50" y1="200" x2="570" y2="200"/><line x1="50" y1="120" x2="570" y2="120"/><line x1="50" y1="40" x2="570" y2="40"/></g>
-        <text x="44" y="204" font-size="12" fill="#A79B90" text-anchor="end">2.1만</text>
-        <text x="44" y="44" font-size="12" fill="#A79B90" text-anchor="end">2.6만</text>
-        <polyline points="50,189 96,86 143,151 189,129 235,74 282,120 328,99 375,48 421,119 467,101 514,59 560,72" fill="none" stroke="#D9502E" stroke-width="2.5" stroke-linejoin="round"/>
-        <circle cx="50" cy="189" r="5" fill="#D9502E" stroke="#fff" stroke-width="1.5"/>
-        <circle cx="375" cy="48" r="5" fill="#D9502E" stroke="#fff" stroke-width="1.5"/>
-        <text x="60" y="204" font-size="13" font-weight="700" fill="#6B5F58">1월 21,349</text>
-        <text x="375" y="32" font-size="13" font-weight="800" fill="#B23E20" text-anchor="middle">8월 25,745</text>
-        <g font-size="12.5" fill="#A79B90" text-anchor="middle">
-          <text x="50" y="222">1월</text><text x="189" y="222">4월</text><text x="328" y="222">7월</text><text x="467" y="222">10월</text><text x="560" y="222">12월</text>
-        </g>
-      </svg>
-    </div>
-  </div>
-  <div class="bottomline" style="font-size:20px;margin-top:30px">이 변동을 역×요일×시간대 <b>혼잡 4등급</b>으로 변환해 보관소 카드에 병기합니다</div>
-  <div class="pageno">12</div>
-</section>
-
-<!-- 13. 4-a 개발 결과물 -->
+<!-- 12. 4-a 개발 결과물 -->
 <section class="slide" style="padding-top:56px">
   <div class="eyebrow">4-a. 가설 검증을 위한 개발 결과물</div>
   <h1 style="font-size:42px">대화 한 줄이 보관함·혼잡·요금까지 닿는 화면</h1>
@@ -415,10 +364,10 @@
       <div style="font-size:13px;color:var(--sub)">한국어·일본어·영어 3개 언어</div>
     </div>
   </div>
-  <div class="pageno">13</div>
+  <div class="pageno">12</div>
 </section>
 
-<!-- 14. 4-b 완성도·실현 가능성 -->
+<!-- 13. 4-b 완성도·실현 가능성 -->
 <section class="slide">
   <div class="eyebrow">4-b. 구현 완성도 및 실현 가능성</div>
   <h1>데모가 아니라,<br>확장 경로가 있는 구조입니다</h1>
@@ -442,10 +391,10 @@
       </p>
     </div>
   </div>
-  <div class="pageno">14</div>
+  <div class="pageno">13</div>
 </section>
 
-<!-- 15. 클로징 -->
+<!-- 14. 클로징 -->
 <section class="slide dark" style="padding-top:250px">
   <div style="font-size:56px;font-weight:800;margin-bottom:56px">감사합니다.</div>
   <div style="font-size:40px;font-weight:800;line-height:1.55;letter-spacing:-0.02em">
