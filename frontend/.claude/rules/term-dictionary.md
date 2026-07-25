@@ -13,7 +13,7 @@
 
 | 한글 | 영문/코드 | 설명·주의 |
 | ---- | -------- | --------- |
-| 역 | station, `StationId` (`nampo`/`busan`/`jagalchi`) | 역명은 원문 병기 대상 고유명사 |
+| 역 | station, `StationId` (`nampo`/`busan`/`jagalchi`) | 역명은 국가철도공단 다국어 역명(2025-06-30) 사용 + 한국어 원문 병기 |
 | 물품 보관함 | locker, `Locker` | 부산 지하철 위드락커. `SUBWAY_LOCKERS`가 목록 |
 | 특대(형) | XL, `xl` / `xl_count` | 캐리어 기준 — UI에서 항상 강조 셀 |
 | 보유 칸수 | held count, `held` 문구 | **실시간 잔여 아님** — 표시 지점마다 문구 필수 (§7-①) |
