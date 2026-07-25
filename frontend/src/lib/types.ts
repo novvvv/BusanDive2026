@@ -34,6 +34,7 @@ export interface CongVM {
 export interface LockerVM {
   id: string;
   station: string;
+  line?: number; // 있으면 역명 앞에 호선 색상 뱃지(LineBadge) 렌더
   stationOrig: string;
   xlLabel: string;
   held: string; // "보유 칸수 기준 · 실시간 잔여 아님" (§7-①)

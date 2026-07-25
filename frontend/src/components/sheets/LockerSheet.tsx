@@ -2,7 +2,8 @@
 
 import { Fragment } from "react";
 import BottomSheet from "@/components/common/BottomSheet";
-import { InfoIcon } from "@/components/common/Icons";
+import LineBadge from "@/components/common/LineBadge";
+import SizeInfoPopover from "@/components/common/SizeInfoPopover";
 import { ALT_LOCKER, CONGESTION_WEEK, LOCKERS, STATIONS } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
@@ -32,9 +33,9 @@ export default function LockerSheet({
   const stationName = mockLocker
     ? tr(STATIONS[mockLocker.station].name)
     : {
-        ko: `${subwayLocker!.name}역 · ${subwayLocker!.line}호선`,
-        ja: `${subwayLocker!.name}駅 · ${subwayLocker!.line}号線`,
-        en: `${subwayLocker!.name} · Line ${subwayLocker!.line}`,
+        ko: `${subwayLocker!.name}역`,
+        ja: `${subwayLocker!.name}駅`,
+        en: subwayLocker!.name,
       }[lang];
   const stationOrig =
     mockLocker && lang !== "ko" ? STATIONS[mockLocker.station].orig : "";
@@ -51,14 +52,13 @@ export default function LockerSheet({
       : "";
 
   const rows = [
-    { k: T.small, v: `${subwayLocker?.s ?? 12}${T.slots}`, fee: "2,000원", hi: false },
-    { k: T.medium, v: `${subwayLocker?.m ?? 20}${T.slots}`, fee: "3,000원", hi: false },
-    { k: T.large, v: `${subwayLocker?.l ?? 18}${T.slots}`, fee: "4,000원", hi: false },
+    { k: T.small, v: `${subwayLocker?.s ?? 12}${T.slots}`, fee: "2,000원" },
+    { k: T.medium, v: `${subwayLocker?.m ?? 20}${T.slots}`, fee: "3,000원" },
+    { k: T.large, v: `${subwayLocker?.l ?? 18}${T.slots}`, fee: "4,000원" },
     {
       k: T.xl,
       v: `${subwayLocker?.xl ?? mockLocker!.xl_count}${T.slots}`,
       fee: mockLocker?.fee.amount ?? "6,000원",
-      hi: true,
     },
   ];
   const location = subwayLocker
@@ -78,33 +78,25 @@ export default function LockerSheet({
 
   return (
     <BottomSheet onClose={onClose}>
-      <div className="mb-1 flex items-baseline gap-2">
+      <div className="mb-1 flex items-center gap-2">
+        <LineBadge line={subwayLocker?.line ?? STATIONS[mockLocker!.station].line} />
         <span className="text-[21px] font-extrabold tracking-tight text-ink">{stationName}</span>
         {stationOrig && <span className="text-label font-medium text-gray">· {stationOrig}</span>}
       </div>
 
-      {/* §7-① 보유 칸수 ≠ 실시간 잔여 — 상시 노출 */}
-      <div className="mb-4 inline-flex items-center gap-1.5 rounded-lg bg-canvas px-2 py-1 text-caption text-gray">
-        <InfoIcon size={12} />
-        {T.held}
+      <div className="mt-1 flex items-center justify-between">
+        <span className="text-[12px] font-bold text-gray">{labels.size}</span>
+        <SizeInfoPopover align="right" />
       </div>
-
-      <div className="mb-2 text-[12px] font-bold text-gray">{labels.size}</div>
       <div className="mb-[18px] flex gap-2">
         {rows.map((r) => (
           <div
             key={r.k}
-            className={`flex-1 rounded-sm border px-1.5 py-2.5 text-center ${
-              r.hi ? "border-primary-line bg-primary-bg" : "border-line bg-canvas"
-            }`}
+            className="flex-1 rounded-sm border border-line bg-canvas py-2.5 text-center"
           >
-            <div className={`mb-[3px] text-caption font-semibold ${r.hi ? "text-primary-dark" : "text-gray"}`}>
-              {r.k}
-            </div>
-            <div className={`text-body font-extrabold ${r.hi ? "text-primary-dark" : "text-ink"}`}>{r.v}</div>
-            <div className={`mt-1 text-[10.5px] font-bold ${r.hi ? "text-primary-dark" : "text-gray"}`}>
-              {r.fee}
-            </div>
+            <div className="text-caption font-semibold text-gray">{r.k}</div>
+            <div className="mt-[3px] text-body font-extrabold text-ink">{r.v}</div>
+            <div className="mt-0.5 text-[10px] font-semibold text-gray">{r.fee}</div>
           </div>
         ))}
       </div>

@@ -32,9 +32,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 15–16"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -102,9 +102,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -172,9 +172,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -242,9 +242,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -312,9 +312,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -382,9 +382,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 15–16"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -452,9 +452,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 15–16"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -522,9 +522,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -592,9 +592,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -662,9 +662,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -732,9 +732,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -802,9 +802,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -872,9 +872,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -942,9 +942,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1012,9 +1012,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 13–14"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1082,9 +1082,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1152,9 +1152,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1222,9 +1222,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1292,9 +1292,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1362,9 +1362,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1432,9 +1432,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1502,9 +1502,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1572,9 +1572,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1642,9 +1642,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 11–12"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1712,9 +1712,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1782,9 +1782,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1852,9 +1852,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 16–17"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1922,9 +1922,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -1992,9 +1992,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2062,9 +2062,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2132,9 +2132,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2202,9 +2202,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekends 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2272,9 +2272,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2342,9 +2342,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2412,9 +2412,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2482,9 +2482,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2552,9 +2552,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2622,9 +2622,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2692,9 +2692,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2762,9 +2762,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2832,9 +2832,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2902,9 +2902,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -2972,9 +2972,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3042,9 +3042,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3112,9 +3112,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3182,9 +3182,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3252,9 +3252,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3322,9 +3322,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3392,9 +3392,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3462,9 +3462,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3532,9 +3532,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3602,9 +3602,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3672,9 +3672,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3742,9 +3742,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3812,9 +3812,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3882,9 +3882,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -3952,9 +3952,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4022,9 +4022,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4092,9 +4092,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4162,9 +4162,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4232,9 +4232,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4302,9 +4302,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4372,9 +4372,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4442,9 +4442,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4512,9 +4512,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 18–19"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4582,9 +4582,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4652,9 +4652,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 13–14"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4722,9 +4722,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4792,9 +4792,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4862,9 +4862,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 08–09"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
@@ -4932,9 +4932,9 @@ export const SUBWAY_CONGESTION: SubwayCongestion[] = [
       "en": "weekdays 17–18"
     },
     "sample": {
-      "ko": "2026.01~06 시간대별 승하차 기반 · 역간 상대 등급",
-      "ja": "2026.01~06 時間帯別乗降データ · 駅間相対等級",
-      "en": "2026.01~06 hourly entries/exits · relative station grade"
+      "ko": "2025 승하차 데이터 기반",
+      "ja": "2025 乗降データ基準",
+      "en": "Based on 2025 ridership data"
     },
     "grid": [
       [
