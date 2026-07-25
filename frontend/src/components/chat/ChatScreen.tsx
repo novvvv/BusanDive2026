@@ -78,7 +78,7 @@ export default function ChatScreen() {
 
   const setChips = (list: Omit<ChipVM, "variant">[], withReset = true) => {
     const norm: ChipVM[] = list.map((c) => ({ ...c, variant: "default" }));
-    if (withReset && norm.length) {
+    if (withReset) {
       norm.push({
         label: { ko: "↻ 다시 하기", ja: "↻ やり直す", en: "↻ Start over" }[lang],
         variant: "reset",
@@ -224,14 +224,7 @@ export default function ChatScreen() {
         };
       }),
     } as Msg);
-    setChips([
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-      {
-        label: { ko: "혼잡 시간 피하고 싶어", ja: "混雑を避けたい", en: "Avoid the crowds" }[lang],
-        onClick: () => api.current.act("cong"),
-      },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-    ]);
+    setChips([]);
   };
 
   const respondLocker = (opts?: { mode?: string; stay?: string; spot?: string }) => {
@@ -254,13 +247,6 @@ export default function ChatScreen() {
       return;
     }
 
-    const afterChips = [
-      {
-        label: { ko: "혼잡 자세히", ja: "混雑を詳しく", en: "Crowd details" }[lang],
-        onClick: () => api.current.act("cong"),
-      },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-    ];
     const distanceBasis = {
       ko: `${recommendation.basisStation}역`,
       ja: `${recommendation.basisStation}駅`,
@@ -279,7 +265,7 @@ export default function ChatScreen() {
       };
       push({ kind: "text", text: tr(intro) } as Msg);
       push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
-      setChips(afterChips);
+      setChips([]);
       return;
     }
 
@@ -301,7 +287,7 @@ export default function ChatScreen() {
         }[lang],
       } as Msg);
       push({ kind: "locker", pickup: null, lockers: recommendedLockers } as Msg);
-      setChips(afterChips);
+      setChips([]);
       return;
     }
 
@@ -318,7 +304,7 @@ export default function ChatScreen() {
       pickup: pickupView(hotel.name),
       lockers: recommendedLockers,
     } as Msg);
-    setChips(afterChips);
+    setChips([]);
   };
 
   const respondCong = () => {
@@ -341,10 +327,7 @@ export default function ChatScreen() {
           onClick: () => openLockerSheet(recommended.id),
         },
       } as Msg);
-      setChips([
-        { label: T.choices[1], onClick: () => api.current.act("locker") },
-        { label: T.choices[2], onClick: () => api.current.act("rag") },
-      ]);
+      setChips([]);
       return;
     }
     const lk = LOCKERS[0];
@@ -359,10 +342,7 @@ export default function ChatScreen() {
       text: tr(text),
       attach: { type: "congOpen", label: T.detail, onClick: () => openLockerSheet(lk.id) },
     } as Msg);
-    setChips([
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-      { label: T.choices[2], onClick: () => api.current.act("rag") },
-    ]);
+    setChips([]);
   };
 
   const respondRag = () => {
@@ -376,10 +356,7 @@ export default function ChatScreen() {
         onClick: () => openSourceSheet(),
       },
     } as Msg);
-    setChips([
-      { label: T.choices[0], onClick: () => api.current.act("poi") },
-      { label: T.choices[1], onClick: () => api.current.act("locker") },
-    ]);
+    setChips([]);
   };
 
   const respondUnknown = () => {
