@@ -8,6 +8,7 @@ import { ALT_LOCKER, CONGESTION_WEEK, LOCKERS, STATIONS } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
 import { SUBWAY_LOCKER_LOCATIONS } from "@/lib/subwayLockers";
+import { localizeSubwayStationName } from "@/lib/subwayNames";
 
 // 혼잡 4등급 색 (congestion 토큰과 동일) — 라벨 병행 필수 (§7 색맹 대응)
 const CBG = ["#E3F3EC", "#FBF0D2", "#FBE4D3", "#F8DAD5"];
@@ -31,14 +32,22 @@ export default function LockerSheet({
   const mockCongestion = mockLocker?.congestion ?? null;
 
   const stationName = mockLocker
-    ? tr(STATIONS[mockLocker.station].name)
-    : {
-        ko: `${subwayLocker!.name}역`,
-        ja: `${subwayLocker!.name}駅`,
-        en: subwayLocker!.name,
-      }[lang];
+    ? localizeSubwayStationName(
+        STATIONS[mockLocker.station].orig.replace(/역$/, ""),
+        STATIONS[mockLocker.station].line,
+        lang,
+      )
+    : localizeSubwayStationName(
+        subwayLocker!.name,
+        subwayLocker!.line,
+        lang,
+      );
   const stationOrig =
-    mockLocker && lang !== "ko" ? STATIONS[mockLocker.station].orig : "";
+    lang === "ko"
+      ? ""
+      : mockLocker
+        ? STATIONS[mockLocker.station].orig
+        : `${subwayLocker!.name}역`;
   const days = CONGESTION_WEEK.days[lang];
   const hourSuffix = { ko: "시", ja: "時", en: ":00" }[lang];
   const congestionHours =

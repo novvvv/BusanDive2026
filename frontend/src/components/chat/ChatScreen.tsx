@@ -23,9 +23,11 @@ import {
 import { useLang } from "@/lib/i18n";
 import {
   recommendSubwayLockers,
+  SUBWAY_LOCKER_LOCATIONS,
   type RecommendedSubwayLocker,
 } from "@/lib/subwayLockers";
 import { findSubwayCongestion } from "@/lib/subwayCongestion";
+import { localizeSubwayStationName } from "@/lib/subwayNames";
 import type { ChipVM, LockerVM, Msg, PickupVM } from "@/lib/types";
 import { findZimcarryHotel } from "@/lib/zimcarryHotels";
 import { ZIMCARRY_PICKUP_POLICY } from "@/lib/zimcarryPolicy";
@@ -102,6 +104,11 @@ export default function ChatScreen() {
   // ── 응답 엔진 ────────────────────────────────
   const lockerView = (lk: Locker): LockerVM => {
     const st = STATIONS[lk.station];
+    const stationName = localizeSubwayStationName(
+      st.orig.replace(/역$/, ""),
+      st.line,
+      lang,
+    );
     const cong = lk.congestion
       ? {
           grade: lk.congestion.grade,
@@ -110,16 +117,16 @@ export default function ChatScreen() {
           bg: CBG[lk.congestion.grade - 1],
           // §7-② 혼잡은 항상 과거형
           text: {
-            ko: `${tr(st.name)}은 ${tr(lk.congestion.peak)}에 혼잡했어요. ${T.congAdvice}`,
-            ja: `${tr(st.name)}は${tr(lk.congestion.peak)}が混雑していました。${T.congAdvice}`,
-            en: `${tr(st.name)} was busy on ${tr(lk.congestion.peak)}. ${T.congAdvice}`,
+            ko: `${stationName}은 ${tr(lk.congestion.peak)}에 혼잡했어요. ${T.congAdvice}`,
+            ja: `${stationName}は${tr(lk.congestion.peak)}が混雑していました。${T.congAdvice}`,
+            en: `${stationName} was busy on ${tr(lk.congestion.peak)}. ${T.congAdvice}`,
           }[lang],
           sample: tr(lk.congestion.sample),
         }
       : null;
     return {
       id: lk.id,
-      station: tr(st.name),
+      station: stationName,
       line: st.line,
       stationOrig: lang === "ko" ? "" : `· ${st.orig}`,
       xlLabel: `${T.xl} ${lk.xl_count}${T.slots}`,
@@ -137,6 +144,11 @@ export default function ChatScreen() {
     distanceBasis: string | null,
   ): LockerVM => {
     const congestionSource = findSubwayCongestion(locker.id);
+    const stationName = localizeSubwayStationName(
+      locker.name,
+      locker.line,
+      lang,
+    );
     const cong = congestionSource
       ? {
           grade: congestionSource.grade,
@@ -144,22 +156,18 @@ export default function ChatScreen() {
           color: CDOT[congestionSource.grade - 1],
           bg: CBG[congestionSource.grade - 1],
           text: {
-            ko: `${locker.name}역은 ${tr(congestionSource.peak)}에 승하차가 가장 많았어요. 이 시간대를 피하면 더 여유로웠어요.`,
-            ja: `${locker.name}駅は${tr(congestionSource.peak)}の乗降が最も多くなりました。この時間帯を避けると比較的空いていました。`,
-            en: `${locker.name} Station had the most entries and exits on ${tr(congestionSource.peak)}. Other times were relatively quieter.`,
+            ko: `${stationName}은 ${tr(congestionSource.peak)}에 승하차가 가장 많았어요. 이 시간대를 피하면 더 여유로웠어요.`,
+            ja: `${stationName}は${tr(congestionSource.peak)}の乗降が最も多くなりました。この時間帯を避けると比較的空いていました。`,
+            en: `${stationName} had the most entries and exits on ${tr(congestionSource.peak)}. Other times were relatively quieter.`,
           }[lang],
           sample: tr(congestionSource.sample),
         }
       : null;
     return {
       id: locker.id,
-      station: {
-        ko: `${locker.name}역`,
-        ja: `${locker.name}駅`,
-        en: locker.name,
-      }[lang],
+      station: stationName,
       line: locker.line,
-      stationOrig: "",
+      stationOrig: lang === "ko" ? "" : `· ${locker.name}역`,
       xlLabel: `${T.xl} ${locker.xl}${T.slots}`,
       held: T.held,
       fee: `${FEE_XL.amount} / ${tr(FEE_XL.per)}`,
@@ -202,6 +210,16 @@ export default function ChatScreen() {
       ),
   });
 
+  const localizedStationName = (name: string | null): string | null => {
+    if (!name) return null;
+    const station = SUBWAY_LOCKER_LOCATIONS.find(
+      (locker) => locker.name === name,
+    );
+    return station
+      ? localizeSubwayStationName(station.name, station.line, lang)
+      : name;
+  };
+
   const respondPoi = () => {
     const intro = {
       ko: "남포동 쪽은 어떠세요? 모두 짐 맡길 수 있는 역 근처예요.",
@@ -218,7 +236,11 @@ export default function ChatScreen() {
           hasImage: p.image,
           name: tr(p.name),
           orig: lang === "ko" ? "" : p.orig,
-          station: tr(st.name),
+          station: localizeSubwayStationName(
+            st.orig.replace(/역$/, ""),
+            st.line,
+            lang,
+          ),
           walk: T.walkMin(p.walk_min),
           xlLabel: `${T.xl} ${p.xl_locker_count}`,
           tags: tr(p.tags),
@@ -253,21 +275,15 @@ export default function ChatScreen() {
     if (spotOnly) {
       const recommendation = recommendSubwayLockers(spot);
       lastRecommendedLockerRef.current = recommendation.lockers[0] ?? null;
-      const distanceBasis = recommendation.basisStation
-        ? {
-            ko: `${recommendation.basisStation}역`,
-            ja: `${recommendation.basisStation}駅`,
-            en: `${recommendation.basisStation} Station`,
-          }[lang]
-        : null;
+      const distanceBasis = localizedStationName(recommendation.basisStation);
       const recommendedLockers = recommendation.lockers.map((locker) =>
         subwayLockerView(locker, distanceBasis),
       );
       const intro = recommendation.isResolved
         ? {
-            ko: `${spot}에 매핑된 ${recommendation.basisStation}역 기준 가까운 물품 보관소예요.`,
-            ja: `${spot}に対応する${recommendation.basisStation}駅を基準に近いロッカーです。`,
-            en: `These lockers are nearest to ${recommendation.basisStation} Station, mapped from ${spot}.`,
+            ko: `${spot}에 매핑된 ${distanceBasis} 기준 가까운 물품 보관소예요.`,
+            ja: `${spot}に対応する${distanceBasis}を基準に近いロッカーです。`,
+            en: `These lockers are nearest to ${distanceBasis}, mapped from ${spot}.`,
           }
         : {
             ko: `${spot} 위치를 정확히 찾지 못해 특대형 보유 칸수가 많은 순으로 보여드려요.`,
@@ -283,13 +299,7 @@ export default function ChatScreen() {
     const stay = opts?.stay?.trim() ?? "";
     const hotel = findZimcarryHotel(stay);
     const recommendation = recommendSubwayLockers(spot);
-    const distanceBasis = recommendation.basisStation
-      ? {
-          ko: `${recommendation.basisStation}역`,
-          ja: `${recommendation.basisStation}駅`,
-          en: `${recommendation.basisStation} Station`,
-        }[lang]
-      : null;
+    const distanceBasis = localizedStationName(recommendation.basisStation);
     const recommendedLockers = recommendation.lockers.map((locker) =>
       subwayLockerView(locker, distanceBasis),
     );
@@ -342,10 +352,15 @@ export default function ChatScreen() {
       ? findSubwayCongestion(recommended.id)
       : null;
     if (recommended && historical) {
+      const stationName = localizeSubwayStationName(
+        recommended.name,
+        recommended.line,
+        lang,
+      );
       const text = {
-        ko: `${recommended.name}역은 ${tr(historical.peak)}에 승하차가 가장 많았어요. ${T.congAdvice}`,
-        ja: `${recommended.name}駅は${tr(historical.peak)}の乗降が最も多くなりました。${T.congAdvice}`,
-        en: `${recommended.name} Station had the most entries and exits on ${tr(historical.peak)}. ${T.congAdvice}`,
+        ko: `${stationName}은 ${tr(historical.peak)}에 승하차가 가장 많았어요. ${T.congAdvice}`,
+        ja: `${stationName}は${tr(historical.peak)}の乗降が最も多くなりました。${T.congAdvice}`,
+        en: `${stationName} had the most entries and exits on ${tr(historical.peak)}. ${T.congAdvice}`,
       };
       push({
         kind: "text",
@@ -364,10 +379,15 @@ export default function ChatScreen() {
     }
     const lk = LOCKERS[0];
     const st = STATIONS[lk.station];
+    const stationName = localizeSubwayStationName(
+      st.orig.replace(/역$/, ""),
+      st.line,
+      lang,
+    );
     const text = {
-      ko: `${tr(st.name)}은 ${tr(lk.congestion!.peak)}에 혼잡했어요. ${T.congAdvice}`,
-      ja: `${tr(st.name)}は${tr(lk.congestion!.peak)}が混雑していました。${T.congAdvice}`,
-      en: `${tr(st.name)} was busy on ${tr(lk.congestion!.peak)}. ${T.congAdvice}`,
+      ko: `${stationName}은 ${tr(lk.congestion!.peak)}에 혼잡했어요. ${T.congAdvice}`,
+      ja: `${stationName}は${tr(lk.congestion!.peak)}が混雑していました。${T.congAdvice}`,
+      en: `${stationName} was busy on ${tr(lk.congestion!.peak)}. ${T.congAdvice}`,
     };
     push({
       kind: "text",
