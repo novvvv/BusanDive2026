@@ -674,7 +674,8 @@ export default function ChatScreen() {
               <button
                 key={c.label}
                 onClick={c.onClick}
-                className={`flex min-h-11 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-[15px] text-[13.5px] font-semibold active:scale-[0.96] ${
+                /* ponytail: 시각 크기 우선으로 40px — 44px 터치 타깃 규칙 예외, 문제 되면 min-h-11 복귀 */
+                className={`flex min-h-10 flex-none items-center gap-[5px] whitespace-nowrap rounded-full border px-3 text-[12.5px] font-semibold active:scale-[0.96] ${
                   c.variant === "reset"
                     ? "border-line-strong bg-transparent text-gray"
                     : "border-primary-line bg-card text-primary-dark"
@@ -700,17 +701,17 @@ export default function ChatScreen() {
               }}
               placeholder={T.inputPlaceholder}
               /* 16px 미만이면 iOS가 포커스 시 강제 줌 — 입력만 16px 고정 */
-              className="min-h-[44px] w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
+              className="min-h-10 w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
             />
-            {/* 입력 있을 때만 활성 — 전송 가능 상태를 색으로 피드백 */}
+            {/* 입력 있을 때만 활성 — 배경 없이 종이비행기 아이콘만 주황으로 피드백 */}
             <button
               onClick={sendDraft}
               aria-label="전송"
-              className={`flex h-11 w-11 flex-none items-center justify-center rounded-full active:scale-[0.92] ${
-                draft.trim() ? "bg-primary text-white" : "bg-transparent text-gray"
+              className={`flex h-10 w-10 flex-none items-center justify-center rounded-full active:scale-[0.92] ${
+                draft.trim() ? "text-primary" : "text-gray"
               }`}
             >
-              <SendIcon size={19} />
+              <SendIcon size={17} />
             </button>
           </div>
         </div>

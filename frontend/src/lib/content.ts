@@ -65,7 +65,7 @@ export interface UiStrings {
 
 export const UI: L10n<UiStrings> = {
   ko: {
-    inputPlaceholder: "메시지를 입력하세요",
+    inputPlaceholder: "보관함·짐 픽업·갈 만한 곳을 물어보세요",
     source: "출처 보기", detail: "상세 보기", pickTogo: "여기로 갈래",
     held: "2026 기준 보유 개수 기준 · 실시간 잔여 아님", walkEst: "직선거리 기준 추정",
     reserve: "짐캐리에서 예약하기", mapTitle: "지도", back: "채팅으로 돌아가기",
@@ -87,7 +87,7 @@ export const UI: L10n<UiStrings> = {
     reserveNote: "예약은 짐캐리 사이트에서 가능해요",
   },
   ja: {
-    inputPlaceholder: "メッセージを入力",
+    inputPlaceholder: "ロッカー・集荷・観光地を質問できます",
     source: "出典を見る", detail: "詳しく見る", pickTogo: "ここに行く",
     held: "2026年基準 · 保有数ベース · リアルタイム残数ではありません", walkEst: "直線距離の目安",
     reserve: "ジムキャリーで予約する", mapTitle: "地図", back: "チャットに戻る",
@@ -109,7 +109,7 @@ export const UI: L10n<UiStrings> = {
     reserveNote: "予約はジムキャリーのサイトで行えます",
   },
   en: {
-    inputPlaceholder: "Type a message",
+    inputPlaceholder: "Ask about lockers, pickup, or places to go",
     source: "View source", detail: "View details", pickTogo: "Go here",
     held: "As of 2026 · based on total lockers · not live availability", walkEst: "Est. from straight-line distance",
     reserve: "Reserve on GimCarry", mapTitle: "Map", back: "Back to chat",
@@ -181,6 +181,9 @@ export interface Locker {
   congestion: Congestion | null;
   x?: number;
   y?: number;
+  /** 데모용 근사 좌표 (카카오맵 마커) */
+  lat?: number;
+  lng?: number;
 }
 
 export const LOCKERS: Locker[] = [
@@ -189,14 +192,14 @@ export const LOCKERS: Locker[] = [
     detail_loc: { floor: "B1", exits: { ko: "3·4·6번 출입구 방향", ja: "3・4・6番出口方向", en: "toward Exits 3·4·6" } },
     distance_m: 120,
     congestion: { grade: 3, peak: { ko: "주말 14~17시", ja: "週末14〜17時", en: "weekends 14–17" }, sample: { ko: "2025년 승하차 데이터", ja: "2025年 乗降データ", en: "2025 ridership data" } },
-    x: 0.5, y: 0.5,
+    x: 0.5, y: 0.5, lat: 35.0977, lng: 129.0272,
   },
   {
     id: "lk-jagalchi", station: "jagalchi", xl_count: 45, fee: FEE_XL,
     detail_loc: { floor: "B1", exits: { ko: "7번 출입구 방향", ja: "7番出口方向", en: "toward Exit 7" } },
     distance_m: 600,
     congestion: { grade: 2, peak: { ko: "평일 저녁", ja: "平日夕方", en: "weekday evenings" }, sample: { ko: "2025년 승하차 데이터", ja: "2025年 乗降データ", en: "2025 ridership data" } },
-    x: 0.34, y: 0.6,
+    x: 0.34, y: 0.6, lat: 35.0979, lng: 129.0207,
   },
 ];
 

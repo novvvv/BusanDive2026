@@ -35,7 +35,7 @@
 | LockerSheet | sheets/LockerSheet.tsx | 보관소 상세 (크기별 칸수·위치·혼잡 히트맵) | 보관함 카드/지도 마커 탭 |
 | SourceSheet | sheets/SourceSheet.tsx | 근거 문서 (RAG 출처 인용 + as_of) | 출처 칩 탭 |
 | LangSheet | sheets/LangSheet.tsx | 언어 선택 시트 | 헤더 언어 버튼 |
-| MapOverlay | sheets/MapOverlay.tsx | 지도 뷰 (placeholder + 절대좌표 마커) | 헤더 지도 버튼. SDK 삽입 지점 주석 참조 |
+| MapOverlay | sheets/MapOverlay.tsx | 지도 뷰 (카카오맵 SDK + CustomOverlay portal 마커) | 헤더 지도 버튼. 키 없음·SDK 실패 시 placeholder 폴백 |
 
 ## 화면·엔진
 
