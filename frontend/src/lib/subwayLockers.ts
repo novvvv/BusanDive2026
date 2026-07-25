@@ -890,6 +890,7 @@ const PLACE_STATION_ALIASES: Record<string, string> = {
   해운대해수욕장: "해운대",
   해운대: "해운대",
   벡스코: "벡스코",
+  bexco: "벡스코",
   센텀시티: "센텀시티",
   서면: "서면",
   부산역: "부산",
