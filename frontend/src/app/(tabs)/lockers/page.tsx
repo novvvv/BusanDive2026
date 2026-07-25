@@ -6,18 +6,23 @@ import { InfoIcon, PinIcon, SearchIcon } from "@/components/common/Icons";
 import { SUBWAY_LOCKERS } from "@/lib/content";
 import { useLang } from "@/lib/i18n";
 
-const NEAR = ["nampo", "jagalchi", "jungang", "busan", "toseong"];
+/** 부산 도시철도 호선 노선색 — 1 주황 / 2 초록 / 3 황토 / 4 파랑 / 5 부산-김해 경전철 보라 */
+const LINE_COLORS: Record<number, string> = {
+  1: "#F06A00",
+  2: "#81BF48",
+  3: "#BB8C00",
+  4: "#217DCB",
+  5: "#8652A1",
+};
 
 /** 보관소 현황 (§FE설계 1 — 하단 탭) — 부산 지하철 위드락커, 표시는 보유 칸수 */
 export default function LockersPage() {
   const { lang, T } = useLang();
   const [query, setQuery] = useState("");
-  const [near, setNear] = useState(false);
 
   const L = {
     title: { ko: "물품 보관소", ja: "ロッカー現況", en: "Lockers" }[lang],
     searchPh: { ko: "역명 검색 (남포·부산·자갈치…)", ja: "駅名で検索", en: "Search station" }[lang],
-    nearFilter: { ko: "관광지 근처", ja: "観光地の近く", en: "Near spots" }[lang],
     feeUnit: { ko: "요금은 3시간 기준", ja: "料金は3時間ごと", en: "Prices per 3 hrs" }[lang],
     sizeLabel: { ko: "크기별 보유 개수·요금", ja: "サイズ別 保有数·料金", en: "Slots & price by size" }[lang],
     sizeInfo: { ko: "사이즈 안내", ja: "サイズ案内", en: "Sizes" }[lang],
@@ -33,17 +38,16 @@ export default function LockersPage() {
     { k: T.xl, dim: "37 × 87 × 55" },
   ];
 
-  let list = near ? SUBWAY_LOCKERS.filter((x) => NEAR.includes(x.id)) : SUBWAY_LOCKERS;
   const q = query.trim();
-  if (q) list = list.filter((x) => x.name.includes(q));
+  const list = q ? SUBWAY_LOCKERS.filter((x) => x.name.includes(q)) : SUBWAY_LOCKERS;
 
   return (
     <div className="flex min-h-0 flex-1 animate-fade-up flex-col">
       <AppHeader title={L.title} />
 
-      {/* 검색 + 필터 */}
-      <div className="flex flex-none flex-col gap-2.5 border-b border-line bg-card px-3.5 py-3">
-        <div className="flex h-11 items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
+      {/* 검색 */}
+      <div className="flex-none bg-canvas px-3.5 pb-1 pt-1">
+        <div className="flex h-11 items-center gap-2 rounded-xs bg-card px-3.5 shadow-card">
           <SearchIcon />
           <input
             value={query}
@@ -53,20 +57,11 @@ export default function LockersPage() {
             className="w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
           />
         </div>
-        <div className="hd-scroll flex gap-[7px] overflow-x-auto">
-          <button
-            onClick={() => setNear(!near)}
-            className={`flex min-h-10 flex-none items-center whitespace-nowrap rounded-full border px-[15px] text-[12px] font-semibold active:scale-[0.96] ${
-              near ? "border-primary bg-primary text-white" : "border-primary-line bg-white text-primary-dark"
-            }`}
-          >
-            {L.nearFilter}
-          </button>
-        </div>
       </div>
 
-      <div className="hd-scroll flex flex-1 flex-col gap-[11px] overflow-y-auto p-3.5">
-        <div className="flex flex-wrap items-center gap-2 px-0.5">
+      <div className="hd-scroll flex flex-1 flex-col gap-[11px] overflow-y-auto p-3.5 pt-2">
+        {/* summary가 터치 타깃 44px을 유지해 세로가 부풀어 — 네거티브 마진으로 시각 간격만 회수 */}
+        <div className="-mb-3 -mt-2.5 flex flex-wrap items-center gap-2 px-0.5">
           {/* 사이즈 안내 팝오버 */}
           <details className="group relative">
             <summary className="flex min-h-11 cursor-pointer list-none items-center gap-1 text-[10.5px] font-semibold text-primary-dark [&::-webkit-details-marker]:hidden">
@@ -83,10 +78,6 @@ export default function LockersPage() {
               ))}
             </div>
           </details>
-          {/* §7-① 보유 칸수 기준 — 목록 상단 상시 노출 */}
-          <span className="inline-flex items-center gap-1 rounded-[7px] bg-canvas px-2 py-[3px] text-[10.5px] text-gray">
-            {T.held}
-          </span>
         </div>
 
         {list.length === 0 && (
@@ -100,7 +91,11 @@ export default function LockersPage() {
           >
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center gap-[7px]">
-                <span className="flex-none rounded-md border border-primary-line bg-primary-bg px-[7px] py-px text-caption font-bold text-primary-dark">
+                {/* 노선색은 데이터 값 — 동적 클래스 금지라 inline style (CDOT 패턴) */}
+                <span
+                  style={{ background: LINE_COLORS[lk.line] }}
+                  className="flex-none rounded-md px-[7px] py-px text-caption font-bold text-white"
+                >
                   {L.line(lk.line)}
                 </span>
                 <span className="text-body font-bold text-ink">

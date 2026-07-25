@@ -686,8 +686,9 @@ export default function ChatScreen() {
           </div>
         )}
         {/* 입력바 — 하단 고정, safe-area 대응 (§4.2) */}
-        <div className="flex items-end gap-[9px] px-3.5 pb-3 pt-1.5">
-          <div className="flex min-h-[44px] flex-1 items-center rounded-[22px] border border-line-strong bg-card px-4 shadow-[0_2px_10px_rgba(42,35,32,0.07)]">
+        {/* 입력+전송 일체형 캡슐 — 전송 버튼이 캡슐 내부 우측 */}
+        <div className="px-3.5 pb-3 pt-1.5">
+          <div className="flex items-center gap-1.5 rounded-[24px] border border-line-strong bg-card py-0.5 pl-4 pr-0.5 shadow-[0_2px_10px_rgba(42,35,32,0.07)]">
             <input
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
@@ -701,14 +702,17 @@ export default function ChatScreen() {
               /* 16px 미만이면 iOS가 포커스 시 강제 줌 — 입력만 16px 고정 */
               className="min-h-[44px] w-full min-w-0 flex-1 bg-transparent text-[16px] text-ink outline-none"
             />
+            {/* 입력 있을 때만 활성 — 전송 가능 상태를 색으로 피드백 */}
+            <button
+              onClick={sendDraft}
+              aria-label="전송"
+              className={`flex h-11 w-11 flex-none items-center justify-center rounded-full active:scale-[0.92] ${
+                draft.trim() ? "bg-primary text-white" : "bg-transparent text-gray"
+              }`}
+            >
+              <SendIcon size={19} />
+            </button>
           </div>
-          <button
-            onClick={sendDraft}
-            aria-label="전송"
-            className="flex h-11 w-11 flex-none items-center justify-center rounded-full bg-primary active:scale-[0.92]"
-          >
-            <SendIcon />
-          </button>
         </div>
       </div>
 
