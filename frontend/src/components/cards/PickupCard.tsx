@@ -6,12 +6,7 @@ import type { PickupVM } from "@/lib/types";
 
 /** 짐캐리 픽업 카드 (§5.2) — 예약은 외부 이동임을 버튼 문구에 명시 */
 export default function PickupCard({ p }: { p: PickupVM }) {
-  const { lang, T } = useLang();
-  const registeredLabel = {
-    ko: "등록 숙소",
-    ja: "登録宿泊先",
-    en: "Registered stay",
-  }[lang];
+  const { T } = useLang();
 
   return (
     <div className="flex flex-col gap-[11px] rounded-lg border border-line bg-card px-[15px] py-3.5 shadow-card">
@@ -20,9 +15,6 @@ export default function PickupCard({ p }: { p: PickupVM }) {
           <BoxIcon />
         </div>
         <span className="text-[14px] font-bold text-ink">{T.pickupTitle}</span>
-        <span className="ml-auto rounded-[7px] bg-congestion-1bg px-2 py-[3px] text-caption font-bold text-success">
-          {registeredLabel}
-        </span>
       </div>
       <div className="text-[13.5px] font-semibold text-ink">{p.hotel}</div>
       <div className="flex gap-2">
