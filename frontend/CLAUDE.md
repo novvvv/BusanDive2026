@@ -35,7 +35,7 @@
 ### 핵심 토큰 (정확한 값은 `tailwind.config.ts` 확인)
 
 - **브랜드**: `primary #D9502E` (유일한 "행동" 색), `primary-dark`(pressed), `primary-bg`(tinted), `primary-line`(tinted border). `heritage #FFB23E`는 악센트 전용 — **절대 CTA 색으로 쓰지 않음**.
-- **중립색**: 웜 그레이 단계 `ink #2A2320`(본문) / `sub` / `gray` / `line` / `line-strong`. 배경 `canvas #FBF7F1`(크림), 카드 `card #FFF`. 차가운 무채색 그레이 금지.
+- **중립색**: 웜 그레이 단계 `ink #2A2320`(본문) / `sub` / `gray` / `line` / `line-strong`. 배경 `canvas #F6F3EF`(웜 그레이 크림), 카드 `card #FFF`. 차가운 무채색 그레이 금지.
 - **혼잡 4등급**: `congestion-1~4` (+ `-1bg~-4bg`) — **색+텍스트 라벨 병행 필수** (색맹 대응).
 - **타입**: Pretendard + 일본어 폴백(Hiragino/Yu Gothic). 스케일 `caption 11 / label 13 / body 15 / body-lg 17 / title 19` — 타이트한 자간 내장.
 - **radius**: `xxs 10 ~ 2xl 28`. 카드 `lg(20px)`, 시트 상단 `xl(24px)`, 칩은 `rounded-full`.

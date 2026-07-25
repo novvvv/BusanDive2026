@@ -31,7 +31,7 @@ export default function MapOverlay({
 
   return (
     <div className="absolute inset-0 z-overlay flex animate-fade-up flex-col bg-canvas">
-      <div className="flex h-14 flex-none items-center gap-3 border-b border-line bg-card px-3">
+      <div className="flex h-14 flex-none items-center gap-3 bg-canvas px-3">
         <button
           onClick={onClose}
           aria-label={T.back}

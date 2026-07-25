@@ -1,6 +1,6 @@
 "use client";
 
-import { GlobeIcon, MapIcon, SunLogo } from "@/components/common/Icons";
+import { GlobeIcon, MapIcon } from "@/components/common/Icons";
 import { useUi } from "@/components/common/UiProvider";
 import { useLang } from "@/lib/i18n";
 
@@ -21,16 +21,13 @@ export default function AppHeader({
   const { openLangSheet, openMap } = useUi();
 
   return (
-    <div className="z-header flex h-14 flex-none items-center justify-between border-b border-line bg-card pl-4 pr-2.5">
+    <div className="z-header flex h-14 flex-none items-center justify-between bg-canvas pl-4 pr-2.5">
       {title ? (
         <span className="min-w-0 truncate text-[18px] font-extrabold tracking-tight text-ink">
           {title}
         </span>
       ) : (
         <div className="flex min-w-0 items-center gap-2">
-          <div className="flex h-[30px] w-[30px] flex-none items-center justify-center rounded-[9px] bg-primary">
-            <SunLogo size={19} />
-          </div>
           <div className="flex items-baseline gap-1.5">
             <span className="text-body-lg font-extrabold tracking-tight text-ink">반나절</span>
             {/* 320px대 초소형 화면에선 보조 표기 생략 — 헤더 넘침 방지 */}
@@ -45,7 +42,7 @@ export default function AppHeader({
         <button
           onClick={openLangSheet}
           aria-label="언어 전환"
-          className="flex min-h-11 items-center gap-1 rounded-full border border-line-strong bg-card px-3 text-label font-semibold text-sub active:scale-[0.96]"
+          className="flex min-h-11 items-center gap-1 rounded-full bg-card px-3 text-label font-semibold text-sub shadow-card active:scale-[0.96]"
         >
           <GlobeIcon />
           {langShort}

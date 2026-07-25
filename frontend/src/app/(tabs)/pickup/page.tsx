@@ -123,7 +123,7 @@ export default function PickupPage() {
               <span className="text-label font-bold text-ink">{L.hotelLabel}</span>
               <span className="text-[11.5px] text-gray">{L.hotelCount}</span>
             </div>
-            <div className="flex h-11 items-center gap-2 rounded-xs border border-line-strong bg-canvas px-3.5">
+            <div className="flex h-11 items-center gap-2 rounded-xs bg-card px-3.5 shadow-card">
               <SearchIcon />
               <input
                 value={query}

@@ -27,7 +27,7 @@ const config: Config = {
         gray: "#A79B90", // text tertiary / placeholder
         line: "#EDE4DA", // hairline border
         "line-strong": "#E0D5C8",
-        canvas: "#FBF7F1", // page background (cream)
+        canvas: "#F6F3EF", // page background (warm gray-cream — 채도 낮춘 크림, 쿨 그레이 금지 유지)
         card: "#FFFFFF",
         // Status
         success: "#1E9E6A",
