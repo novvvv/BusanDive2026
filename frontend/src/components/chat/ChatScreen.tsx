@@ -725,6 +725,7 @@ export default function ChatScreen() {
   const edgeKeys: EdgeKind[] = ["NO_HOTEL", "UNREGISTERED", "DEADLINE_PASSED", "NO_LOCKER", "NO_CONG", "BOUNDARY", "ZERO", "NETERR", "UNKNOWN"];
 
   const orLabel = { ko: "지하철 물품 보관소", ja: "地下鉄ロッカー", en: "Metro lockers" }[lang];
+  const pickupLabel = { ko: "짐캐리 픽업 숙소", ja: "ジムキャリー集荷の宿泊先", en: "GimCarry pickup stay" }[lang];
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -790,14 +791,9 @@ export default function ChatScreen() {
               <div className="flex max-w-[82%] flex-col gap-[11px] min-[360px]:ml-[38px]">
                 {m.pickup && (
                   <>
+                    <StreamDivider label={pickupLabel} />
                     <PickupCard p={m.pickup} />
-                    {m.lockers.length > 0 && (
-                      <div className="flex items-center gap-2 text-gray">
-                        <div className="h-px flex-1 bg-line" />
-                        <span className="text-caption font-semibold">{orLabel}</span>
-                        <div className="h-px flex-1 bg-line" />
-                      </div>
-                    )}
+                    {m.lockers.length > 0 && <StreamDivider label={orLabel} />}
                   </>
                 )}
                 {m.lockers.map((lk) => (
@@ -934,6 +930,16 @@ export default function ChatScreen() {
           </div>
         </BottomSheet>
       )}
+    </div>
+  );
+}
+
+function StreamDivider({ label }: { label: string }) {
+  return (
+    <div className="flex items-center gap-2 text-gray">
+      <div className="h-px flex-1 bg-line" />
+      <span className="text-caption font-semibold">{label}</span>
+      <div className="h-px flex-1 bg-line" />
     </div>
   );
 }
